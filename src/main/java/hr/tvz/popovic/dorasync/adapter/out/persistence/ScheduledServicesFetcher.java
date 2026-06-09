@@ -16,7 +16,7 @@ import java.util.List;
 import static hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.Services.SERVICES;
 
 @Repository
-public final class ScheduledServicesFetcher implements FetchScheduledServicesPort {
+public class ScheduledServicesFetcher implements FetchScheduledServicesPort {
 
     private static final Logger log = LoggerFactory.getLogger(ScheduledServicesFetcher.class);
     private final DSLContext dsl;
