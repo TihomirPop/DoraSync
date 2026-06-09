@@ -5,6 +5,9 @@ spring:
     url: ${DATASOURCE_URL:jdbc:postgresql://localhost:5432/dora}
     username: ${DATASOURCE_USERNAME:dora}
     password: ${DATASOURCE_PASSWORD:dora}
+  threads:
+    virtual:
+      enabled: true
 
 dora-sync:
   scheduled-job-enqueuer:
