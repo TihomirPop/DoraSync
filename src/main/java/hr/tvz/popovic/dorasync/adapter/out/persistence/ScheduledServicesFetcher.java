@@ -1,4 +1,4 @@
-package hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated;
+package hr.tvz.popovic.dorasync.adapter.out.persistence;
 
 import hr.tvz.popovic.dorasync.application.domain.model.Id;
 import hr.tvz.popovic.dorasync.application.domain.model.Service;
@@ -39,7 +39,7 @@ public final class ScheduledServicesFetcher implements FetchScheduledServicesPor
             return new Result.Success(services);
         } catch (DataAccessException e) {
             log.error("Failed to fetch scheduled services", e);
-            return new Result.Failure();
+            return new Result.Failure(e);
         }
     }
 

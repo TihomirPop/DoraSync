@@ -18,7 +18,7 @@ public interface TransactionRunnerPort {
         record Success<T>(T value) implements Result<T> {
         }
 
-        record Failure<T>(Throwable cause) implements Result<T> {
+        record Failure<T>(Exception cause) implements Result<T> {
         }
     }
 }

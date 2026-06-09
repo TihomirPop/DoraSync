@@ -13,7 +13,7 @@ public interface FetchScheduledServicesPort {
         record Success(List<Service> services) implements Result {
         }
 
-        record Failure() implements Result {
+        record Failure(Exception cause) implements Result {
         }
     }
 
