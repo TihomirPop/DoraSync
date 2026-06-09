@@ -34,9 +34,11 @@ pipeline {
             steps {
                 sh """
                     mvn spring-boot:build-image \
-                        -DskipTests \
-                        -Dspring-boot.build-image.imageName=${imageTag} \
-                        --no-transfer-progress
+                      -DskipTests \
+                      -Dspring-boot.build-image.imageName="${imageTag}" \
+                      -Dgit.commit.sha="${env.GIT_COMMIT}" \
+                      -Dgit.repo.url="${env.GIT_URL}" \
+                      --no-transfer-progress
                 """
             }
         }
