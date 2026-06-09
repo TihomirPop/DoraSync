@@ -5,9 +5,9 @@ import hr.tvz.popovic.dorasync.application.domain.model.Service;
 import hr.tvz.popovic.dorasync.application.domain.model.ServiceName;
 import hr.tvz.popovic.dorasync.application.port.out.FetchScheduledServicesPort;
 import org.jooq.DSLContext;
-import org.jooq.exception.DataAccessException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Repository;
 
 import java.time.OffsetDateTime;
@@ -19,6 +19,7 @@ import static hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tab
 public class ScheduledServicesFetcher implements FetchScheduledServicesPort {
 
     private static final Logger log = LoggerFactory.getLogger(ScheduledServicesFetcher.class);
+
     private final DSLContext dsl;
 
     public ScheduledServicesFetcher(DSLContext dsl) {
@@ -30,17 +31,16 @@ public class ScheduledServicesFetcher implements FetchScheduledServicesPort {
         try {
             List<Service> services = dsl.selectFrom(SERVICES)
                     .where(SERVICES.NEXT_SYNC_AT.lessThan(OffsetDateTime.now()))
-                    .fetch()
-                    .map(record -> new Service(
+                    .fetch(record -> new Service(
                             new Id(record.getId()),
                             new ServiceName(record.getName())
                     ));
 
             return new Result.Success(services);
+
         } catch (DataAccessException e) {
             log.error("Failed to fetch scheduled services", e);
             return new Result.Failure(e);
         }
     }
-
 }
