@@ -1,7 +1,11 @@
 spring:
-    application:
-        name: DoraSync
-    datasource:
-        url: ${DATASOURCE_URL:jdbc:postgresql://localhost:5432/dora}
-        username: ${DATASOURCE_USERNAME:dora}
-        password: ${DATASOURCE_PASSWORD:dora}
+  application:
+    name: DoraSync
+  datasource:
+    url: ${DATASOURCE_URL:jdbc:postgresql://localhost:5432/dora}
+    username: ${DATASOURCE_USERNAME:dora}
+    password: ${DATASOURCE_PASSWORD:dora}
+
+dora-sync:
+  scheduled-job-enqueuer:
+    fixed-rate: 1m
