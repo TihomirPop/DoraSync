@@ -11,15 +11,13 @@ import hr.tvz.popovic.dorasync.application.port.out.FetchServiceConnectionsPort;
 import hr.tvz.popovic.dorasync.application.port.out.RescheduleServicePort;
 import hr.tvz.popovic.dorasync.application.port.out.RunJobPort;
 import hr.tvz.popovic.dorasync.application.port.out.TransactionRunnerPort;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
 public final class ScheduledJobEnqueuer implements EnqueueScheduledJobsUseCase {
 
-    private static final Logger log = LoggerFactory.getLogger(ScheduledJobEnqueuer.class);
     private final TransactionRunnerPort transactionRunner;
     private final FetchScheduledServicesPort fetchScheduledServicesPort;
     private final RescheduleServicePort rescheduleServicePort;
@@ -50,34 +48,34 @@ public final class ScheduledJobEnqueuer implements EnqueueScheduledJobsUseCase {
             return switch (fetchResult) {
                 case FetchScheduledServicesPort.Result.Success(var services) -> processServices(services, transaction);
                 case FetchScheduledServicesPort.Result.Failure(var cause) -> {
-                    log.error("Failed to fetch scheduled services", cause);
                     transaction.rollback();
-                    yield new Result.Failure(cause);
+                    yield new Result.Failure("Failed to fetch scheduled services", cause);
                 }
             };
         });
 
         return switch (transactionResult) {
             case TransactionRunnerPort.Result.Success<Result>(var result) -> result;
-            case TransactionRunnerPort.Result.Failure<Result>(var cause) -> new Result.Failure(cause);
+            case TransactionRunnerPort.Result.Failure<Result>(var cause) -> new Result.Failure("Failed to enqueue scheduled jobs", cause);
         };
     }
 
     private Result processServices(List<Service> services, TransactionRunnerPort.Transaction transaction) {
+        List<Id> skippedServiceIds = new ArrayList<>();
         for (Service service : services) {
-            Result result = processService(service, transaction);
-            switch (result) {
-                case Result.Failure _ -> {
-                    return result;
+            switch (processService(service, transaction)) {
+                case ProcessResult.Done() -> {
                 }
-                case Result.Success _ -> {
+                case ProcessResult.Skipped() -> skippedServiceIds.add(service.id());
+                case ProcessResult.Failed(var message, var cause) -> {
+                    return new Result.Failure(message, cause);
                 }
             }
         }
-        return new Result.Success();
+        return new Result.Success(skippedServiceIds);
     }
 
-    private Result processService(Service service, TransactionRunnerPort.Transaction transaction) {
+    private ProcessResult processService(Service service, TransactionRunnerPort.Transaction transaction) {
         Service rescheduled = service.reschedule();
 
         var rescheduleResult = rescheduleServicePort.reschedule(service.id(), rescheduled.nextSyncAt());
@@ -85,9 +83,8 @@ public final class ScheduledJobEnqueuer implements EnqueueScheduledJobsUseCase {
             case RescheduleServicePort.Result.Success() -> {
             }
             case RescheduleServicePort.Result.Failure(var cause) -> {
-                log.error("Failed to reschedule service {}", service.id(), cause);
                 transaction.rollback();
-                return new Result.Failure(cause);
+                return new ProcessResult.Failed("Failed to reschedule service " + service.id(), cause);
             }
         }
 
@@ -96,24 +93,25 @@ public final class ScheduledJobEnqueuer implements EnqueueScheduledJobsUseCase {
         switch (connectionsResult) {
             case FetchServiceConnectionsPort.Result.Success(var types) -> connectionTypes = types;
             case FetchServiceConnectionsPort.Result.Failure(var cause) -> {
-                log.error("Failed to fetch connections for service {}", service.id(), cause);
                 transaction.rollback();
-                return new Result.Failure(cause);
+                return new ProcessResult.Failed("Failed to fetch connections for service " + service.id(), cause);
             }
         }
 
         if (connectionTypes.isEmpty()) {
-            return new Result.Success();
+            return new ProcessResult.Done();
         }
 
         var runResult = runJobPort.run(service.id(), LockedUntil.nowPlusTenMinutes());
         Id jobId;
         switch (runResult) {
             case RunJobPort.Result.Success(var id) -> jobId = id;
+            case RunJobPort.Result.AlreadyRunning() -> {
+                return new ProcessResult.Skipped();
+            }
             case RunJobPort.Result.Failure(var cause) -> {
-                log.error("Failed to run job for service {}", service.id(), cause);
                 transaction.rollback();
-                return new Result.Failure(cause);
+                return new ProcessResult.Failed("Failed to run job for service " + service.id(), cause);
             }
         }
 
@@ -123,13 +121,24 @@ public final class ScheduledJobEnqueuer implements EnqueueScheduledJobsUseCase {
                 case AddJobStepPort.Result.Success(var _) -> {
                 }
                 case AddJobStepPort.Result.Failure(var cause) -> {
-                    log.error("Failed to add job step {} for job {}", connectionType, jobId, cause);
                     transaction.rollback();
-                    return new Result.Failure(cause);
+                    return new ProcessResult.Failed("Failed to add job step " + connectionType + " for job " + jobId, cause);
                 }
             }
         }
 
-        return new Result.Success();
+        return new ProcessResult.Done();
+    }
+
+    private sealed interface ProcessResult {
+
+        record Done() implements ProcessResult {
+        }
+
+        record Skipped() implements ProcessResult {
+        }
+
+        record Failed(String message, Exception cause) implements ProcessResult {
+        }
     }
 }

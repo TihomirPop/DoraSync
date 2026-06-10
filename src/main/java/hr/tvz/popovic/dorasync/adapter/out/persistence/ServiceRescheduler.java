@@ -3,8 +3,6 @@ package hr.tvz.popovic.dorasync.adapter.out.persistence;
 import hr.tvz.popovic.dorasync.application.domain.model.Id;
 import hr.tvz.popovic.dorasync.application.port.out.RescheduleServicePort;
 import org.jooq.DSLContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Repository;
 
@@ -16,8 +14,6 @@ import static hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tab
 
 @Repository
 public class ServiceRescheduler implements RescheduleServicePort {
-
-    private static final Logger log = LoggerFactory.getLogger(ServiceRescheduler.class);
 
     private final DSLContext dsl;
 
@@ -36,7 +32,6 @@ public class ServiceRescheduler implements RescheduleServicePort {
             return new Result.Success();
 
         } catch (DataAccessException e) {
-            log.error("Failed to reschedule service {}", serviceId, e);
             return new Result.Failure(e);
         }
     }

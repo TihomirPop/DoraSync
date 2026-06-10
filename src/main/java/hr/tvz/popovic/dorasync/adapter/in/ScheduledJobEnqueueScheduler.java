@@ -21,9 +21,12 @@ public class ScheduledJobEnqueueScheduler {
     public void enqueueJobs() {
         var result = enqueueScheduledJobsUseCase.enqueue();
         switch (result) {
-            case EnqueueScheduledJobsUseCase.Result.Success() -> {
+            case EnqueueScheduledJobsUseCase.Result.Success(var skippedServiceIds) -> {
+                if (!skippedServiceIds.isEmpty()) {
+                    log.info("Skipped enqueueing jobs for services with a job already running: {}", skippedServiceIds);
+                }
             }
-            case EnqueueScheduledJobsUseCase.Result.Failure(var cause) -> log.error("Failed to enqueue scheduled jobs", cause);
+            case EnqueueScheduledJobsUseCase.Result.Failure(var message, var cause) -> log.error(message, cause);
         }
     }
 }

@@ -12,3 +12,5 @@ spring:
 dora-sync:
   scheduled-job-enqueuer:
     fixed-rate: 1m
+  stale-job-reaper:
+    fixed-rate: 1m

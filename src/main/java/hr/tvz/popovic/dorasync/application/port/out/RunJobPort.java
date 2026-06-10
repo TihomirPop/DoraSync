@@ -12,6 +12,9 @@ public interface RunJobPort {
         record Success(Id jobId) implements Result {
         }
 
+        record AlreadyRunning() implements Result {
+        }
+
         record Failure(Exception cause) implements Result {
         }
     }

@@ -6,8 +6,6 @@ import hr.tvz.popovic.dorasync.application.port.out.AddJobStepPort;
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.enums.JobStepStatus;
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.enums.JobStepType;
 import org.jooq.DSLContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Repository;
 
@@ -15,8 +13,6 @@ import static hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tab
 
 @Repository
 public class JobStepAdder implements AddJobStepPort {
-
-    private static final Logger log = LoggerFactory.getLogger(JobStepAdder.class);
 
     private final DSLContext dsl;
 
@@ -44,7 +40,6 @@ public class JobStepAdder implements AddJobStepPort {
             return new Result.Success(new Id(record.getId()));
 
         } catch (DataAccessException e) {
-            log.error("Failed to add job step {} for job {}", connectionType, jobId, e);
             return new Result.Failure(e);
         }
     }

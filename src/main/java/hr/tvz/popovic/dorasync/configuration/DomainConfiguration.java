@@ -1,9 +1,11 @@
 package hr.tvz.popovic.dorasync.configuration;
 
 import hr.tvz.popovic.dorasync.application.domain.service.ScheduledJobEnqueuer;
+import hr.tvz.popovic.dorasync.application.domain.service.StaleJobReaper;
 import hr.tvz.popovic.dorasync.application.port.out.AddJobStepPort;
 import hr.tvz.popovic.dorasync.application.port.out.FetchScheduledServicesPort;
 import hr.tvz.popovic.dorasync.application.port.out.FetchServiceConnectionsPort;
+import hr.tvz.popovic.dorasync.application.port.out.ReapStaleJobsPort;
 import hr.tvz.popovic.dorasync.application.port.out.RescheduleServicePort;
 import hr.tvz.popovic.dorasync.application.port.out.RunJobPort;
 import hr.tvz.popovic.dorasync.application.port.out.TransactionRunnerPort;
@@ -30,6 +32,11 @@ public class DomainConfiguration {
                 runJobPort,
                 addJobStepPort
         );
+    }
+
+    @Bean
+    StaleJobReaper staleJobReaper(ReapStaleJobsPort reapStaleJobsPort) {
+        return new StaleJobReaper(reapStaleJobsPort);
     }
 
 }
