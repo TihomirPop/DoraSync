@@ -33,7 +33,8 @@ public class ScheduledServicesFetcher implements FetchScheduledServicesPort {
                     .where(SERVICES.NEXT_SYNC_AT.lessThan(OffsetDateTime.now()))
                     .fetch(record -> new Service(
                             new Id(record.getId()),
-                            new ServiceName(record.getName())
+                            new ServiceName(record.getName()),
+                            record.getNextSyncAt().toInstant()
                     ));
 
             return new Result.Success(services);
