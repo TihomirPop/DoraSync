@@ -6,6 +6,7 @@ package hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated;
 
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.JobSteps;
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.Jobs;
+import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.ServiceConnections;
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.Services;
 
 import java.util.Arrays;
@@ -40,6 +41,11 @@ public class Public extends SchemaImpl {
     public final Jobs JOBS = Jobs.JOBS;
 
     /**
+     * The table <code>public.service_connections</code>.
+     */
+    public final ServiceConnections SERVICE_CONNECTIONS = ServiceConnections.SERVICE_CONNECTIONS;
+
+    /**
      * The table <code>public.services</code>.
      */
     public final Services SERVICES = Services.SERVICES;
@@ -62,6 +68,7 @@ public class Public extends SchemaImpl {
         return Arrays.asList(
             JobSteps.JOB_STEPS,
             Jobs.JOBS,
+            ServiceConnections.SERVICE_CONNECTIONS,
             Services.SERVICES
         );
     }

@@ -6,9 +6,11 @@ package hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated;
 
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.JobSteps;
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.Jobs;
+import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.ServiceConnections;
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.Services;
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.records.JobStepsRecord;
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.records.JobsRecord;
+import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.records.ServiceConnectionsRecord;
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.records.ServicesRecord;
 
 import org.jooq.ForeignKey;
@@ -31,6 +33,8 @@ public class Keys {
 
     public static final UniqueKey<JobStepsRecord> JOB_STEPS_PKEY = Internal.createUniqueKey(JobSteps.JOB_STEPS, DSL.name("job_steps_pkey"), new TableField[] { JobSteps.JOB_STEPS.ID }, true);
     public static final UniqueKey<JobsRecord> JOBS_PKEY = Internal.createUniqueKey(Jobs.JOBS, DSL.name("jobs_pkey"), new TableField[] { Jobs.JOBS.ID }, true);
+    public static final UniqueKey<ServiceConnectionsRecord> SERVICE_CONNECTIONS_PKEY = Internal.createUniqueKey(ServiceConnections.SERVICE_CONNECTIONS, DSL.name("service_connections_pkey"), new TableField[] { ServiceConnections.SERVICE_CONNECTIONS.ID }, true);
+    public static final UniqueKey<ServiceConnectionsRecord> SERVICE_CONNECTIONS_SERVICE_ID_TYPE_EXTERNAL_REFERENCE_KEY = Internal.createUniqueKey(ServiceConnections.SERVICE_CONNECTIONS, DSL.name("service_connections_service_id_type_external_reference_key"), new TableField[] { ServiceConnections.SERVICE_CONNECTIONS.SERVICE_ID, ServiceConnections.SERVICE_CONNECTIONS.TYPE, ServiceConnections.SERVICE_CONNECTIONS.EXTERNAL_REFERENCE }, true);
     public static final UniqueKey<ServicesRecord> SERVICES_PKEY = Internal.createUniqueKey(Services.SERVICES, DSL.name("services_pkey"), new TableField[] { Services.SERVICES.ID }, true);
 
     // -------------------------------------------------------------------------
@@ -39,4 +43,5 @@ public class Keys {
 
     public static final ForeignKey<JobStepsRecord, JobsRecord> JOB_STEPS__JOB_STEPS_JOB_ID_FKEY = Internal.createForeignKey(JobSteps.JOB_STEPS, DSL.name("job_steps_job_id_fkey"), new TableField[] { JobSteps.JOB_STEPS.JOB_ID }, Keys.JOBS_PKEY, new TableField[] { Jobs.JOBS.ID }, true);
     public static final ForeignKey<JobsRecord, ServicesRecord> JOBS__JOBS_SERVICE_ID_FKEY = Internal.createForeignKey(Jobs.JOBS, DSL.name("jobs_service_id_fkey"), new TableField[] { Jobs.JOBS.SERVICE_ID }, Keys.SERVICES_PKEY, new TableField[] { Services.SERVICES.ID }, true);
+    public static final ForeignKey<ServiceConnectionsRecord, ServicesRecord> SERVICE_CONNECTIONS__SERVICE_CONNECTIONS_SERVICE_ID_FKEY = Internal.createForeignKey(ServiceConnections.SERVICE_CONNECTIONS, DSL.name("service_connections_service_id_fkey"), new TableField[] { ServiceConnections.SERVICE_CONNECTIONS.SERVICE_ID }, Keys.SERVICES_PKEY, new TableField[] { Services.SERVICES.ID }, true);
 }

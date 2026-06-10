@@ -7,6 +7,7 @@ package hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables;
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.Keys;
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.Public;
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.Jobs.JobsPath;
+import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.ServiceConnections.ServiceConnectionsPath;
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.records.ServicesRecord;
 
 import java.time.OffsetDateTime;
@@ -153,6 +154,19 @@ public class Services extends TableImpl<ServicesRecord> {
             _jobs = new JobsPath(this, null, Keys.JOBS__JOBS_SERVICE_ID_FKEY.getInverseKey());
 
         return _jobs;
+    }
+
+    private transient ServiceConnectionsPath _serviceConnections;
+
+    /**
+     * Get the implicit to-many join path to the
+     * <code>public.service_connections</code> table
+     */
+    public ServiceConnectionsPath serviceConnections() {
+        if (_serviceConnections == null)
+            _serviceConnections = new ServiceConnectionsPath(this, null, Keys.SERVICE_CONNECTIONS__SERVICE_CONNECTIONS_SERVICE_ID_FKEY.getInverseKey());
+
+        return _serviceConnections;
     }
 
     @Override

@@ -6,6 +6,7 @@ package hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated;
 
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.JobSteps;
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.Jobs;
+import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.ServiceConnections;
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.Services;
 
 
@@ -24,6 +25,11 @@ public class Tables {
      * The table <code>public.jobs</code>.
      */
     public static final Jobs JOBS = Jobs.JOBS;
+
+    /**
+     * The table <code>public.service_connections</code>.
+     */
+    public static final ServiceConnections SERVICE_CONNECTIONS = ServiceConnections.SERVICE_CONNECTIONS;
 
     /**
      * The table <code>public.services</code>.
