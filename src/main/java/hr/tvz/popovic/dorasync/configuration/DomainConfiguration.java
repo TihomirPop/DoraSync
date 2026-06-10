@@ -1,14 +1,24 @@
 package hr.tvz.popovic.dorasync.configuration;
 
+import hr.tvz.popovic.dorasync.application.domain.service.DeploykoStepCollector;
+import hr.tvz.popovic.dorasync.application.domain.service.GithubStepCollector;
+import hr.tvz.popovic.dorasync.application.domain.service.JenkinsStepCollector;
+import hr.tvz.popovic.dorasync.application.domain.service.JobStepWorker;
 import hr.tvz.popovic.dorasync.application.domain.service.ScheduledJobEnqueuer;
 import hr.tvz.popovic.dorasync.application.domain.service.StaleJobReaper;
 import hr.tvz.popovic.dorasync.application.port.out.AddJobStepPort;
+import hr.tvz.popovic.dorasync.application.port.out.DequeueJobStepsPort;
+import hr.tvz.popovic.dorasync.application.port.out.FetchConnectionPort;
 import hr.tvz.popovic.dorasync.application.port.out.FetchScheduledServicesPort;
 import hr.tvz.popovic.dorasync.application.port.out.FetchServiceConnectionsPort;
+import hr.tvz.popovic.dorasync.application.port.out.FinishJobPort;
+import hr.tvz.popovic.dorasync.application.port.out.FinishJobStepPort;
 import hr.tvz.popovic.dorasync.application.port.out.ReapStaleJobsPort;
 import hr.tvz.popovic.dorasync.application.port.out.RescheduleServicePort;
 import hr.tvz.popovic.dorasync.application.port.out.RunJobPort;
+import hr.tvz.popovic.dorasync.application.port.out.TaskExecutorPort;
 import hr.tvz.popovic.dorasync.application.port.out.TransactionRunnerPort;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -37,6 +47,46 @@ public class DomainConfiguration {
     @Bean
     StaleJobReaper staleJobReaper(TransactionRunnerPort transactionRunnerPort, ReapStaleJobsPort reapStaleJobsPort) {
         return new StaleJobReaper(transactionRunnerPort, reapStaleJobsPort);
+    }
+
+    @Bean
+    GithubStepCollector githubStepCollector(FetchConnectionPort fetchConnectionPort) {
+        return new GithubStepCollector(fetchConnectionPort);
+    }
+
+    @Bean
+    JenkinsStepCollector jenkinsStepCollector(FetchConnectionPort fetchConnectionPort) {
+        return new JenkinsStepCollector(fetchConnectionPort);
+    }
+
+    @Bean
+    DeploykoStepCollector deploykoStepCollector(FetchConnectionPort fetchConnectionPort) {
+        return new DeploykoStepCollector(fetchConnectionPort);
+    }
+
+    @Bean
+    JobStepWorker jobStepWorker(
+            @Value("${dora-sync.job-step-worker.batch-size}") int batchSize,
+            TransactionRunnerPort transactionRunnerPort,
+            DequeueJobStepsPort dequeueJobStepsPort,
+            FinishJobStepPort finishJobStepPort,
+            FinishJobPort finishJobPort,
+            TaskExecutorPort taskExecutorPort,
+            GithubStepCollector githubStepCollector,
+            JenkinsStepCollector jenkinsStepCollector,
+            DeploykoStepCollector deploykoStepCollector
+    ) {
+        return new JobStepWorker(
+                batchSize,
+                transactionRunnerPort,
+                dequeueJobStepsPort,
+                finishJobStepPort,
+                finishJobPort,
+                taskExecutorPort,
+                githubStepCollector,
+                jenkinsStepCollector,
+                deploykoStepCollector
+        );
     }
 
 }

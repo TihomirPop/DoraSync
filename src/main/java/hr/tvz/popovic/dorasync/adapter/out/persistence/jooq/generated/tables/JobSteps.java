@@ -12,7 +12,6 @@ import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.enums.JobS
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.Jobs.JobsPath;
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.records.JobStepsRecord;
 
-import java.time.OffsetDateTime;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -81,11 +80,6 @@ public class JobSteps extends TableImpl<JobStepsRecord> {
      * The column <code>public.job_steps.status</code>.
      */
     public final TableField<JobStepsRecord, JobStepStatus> STATUS = createField(DSL.name("status"), SQLDataType.VARCHAR.nullable(false).asEnumDataType(JobStepStatus.class), this, "");
-
-    /**
-     * The column <code>public.job_steps.locked_until</code>.
-     */
-    public final TableField<JobStepsRecord, OffsetDateTime> LOCKED_UNTIL = createField(DSL.name("locked_until"), SQLDataType.TIMESTAMPWITHTIMEZONE(6), this, "");
 
     private JobSteps(Name alias, Table<JobStepsRecord> aliased) {
         this(alias, aliased, (Field<?>[]) null, null);
@@ -156,7 +150,7 @@ public class JobSteps extends TableImpl<JobStepsRecord> {
 
     @Override
     public List<Index> getIndexes() {
-        return Arrays.asList(Indexes.IX_JOB_STEPS_JOB_ID, Indexes.UX_JOB_STEPS_ONE_RUNNING_PER_JOB_AND_TYPE);
+        return Arrays.asList(Indexes.IX_JOB_STEPS_JOB_ID, Indexes.IX_JOB_STEPS_PENDING, Indexes.UX_JOB_STEPS_ONE_RUNNING_PER_JOB_AND_TYPE);
     }
 
     @Override

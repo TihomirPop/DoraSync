@@ -8,7 +8,6 @@ import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.enums.JobS
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.enums.JobStepType;
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.JobSteps;
 
-import java.time.OffsetDateTime;
 import java.util.UUID;
 
 import org.jooq.Record1;
@@ -79,20 +78,6 @@ public class JobStepsRecord extends UpdatableRecordImpl<JobStepsRecord> {
         return (JobStepStatus) get(3);
     }
 
-    /**
-     * Setter for <code>public.job_steps.locked_until</code>.
-     */
-    public void setLockedUntil(OffsetDateTime value) {
-        set(4, value);
-    }
-
-    /**
-     * Getter for <code>public.job_steps.locked_until</code>.
-     */
-    public OffsetDateTime getLockedUntil() {
-        return (OffsetDateTime) get(4);
-    }
-
     // -------------------------------------------------------------------------
     // Primary key information
     // -------------------------------------------------------------------------
@@ -116,14 +101,13 @@ public class JobStepsRecord extends UpdatableRecordImpl<JobStepsRecord> {
     /**
      * Create a detached, initialised JobStepsRecord
      */
-    public JobStepsRecord(UUID id, UUID jobId, JobStepType type, JobStepStatus status, OffsetDateTime lockedUntil) {
+    public JobStepsRecord(UUID id, UUID jobId, JobStepType type, JobStepStatus status) {
         super(JobSteps.JOB_STEPS);
 
         setId(id);
         setJobId(jobId);
         setType(type);
         setStatus(status);
-        setLockedUntil(lockedUntil);
         resetChangedOnNotNull();
     }
 }

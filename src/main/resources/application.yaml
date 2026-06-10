@@ -14,3 +14,6 @@ dora-sync:
     fixed-rate: 1m
   stale-job-reaper:
     fixed-rate: 1m
+  job-step-worker:
+    fixed-rate: 1m
+    batch-size: 50

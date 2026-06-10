@@ -159,7 +159,7 @@ public class ServiceConnections extends TableImpl<ServiceConnectionsRecord> {
 
     @Override
     public List<UniqueKey<ServiceConnectionsRecord>> getUniqueKeys() {
-        return Arrays.asList(Keys.SERVICE_CONNECTIONS_SERVICE_ID_TYPE_EXTERNAL_REFERENCE_KEY);
+        return Arrays.asList(Keys.SERVICE_CONNECTIONS_SERVICE_ID_TYPE_KEY);
     }
 
     @Override

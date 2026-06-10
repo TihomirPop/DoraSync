@@ -25,6 +25,7 @@ public class Indexes {
     // -------------------------------------------------------------------------
 
     public static final Index IX_JOB_STEPS_JOB_ID = Internal.createIndex(DSL.name("ix_job_steps_job_id"), JobSteps.JOB_STEPS, new OrderField[] { JobSteps.JOB_STEPS.JOB_ID }, false);
+    public static final Index IX_JOB_STEPS_PENDING = Internal.createIndex(DSL.name("ix_job_steps_pending"), JobSteps.JOB_STEPS, new OrderField[] { JobSteps.JOB_STEPS.ID }, false);
     public static final Index IX_JOBS_SERVICE_ID = Internal.createIndex(DSL.name("ix_jobs_service_id"), Jobs.JOBS, new OrderField[] { Jobs.JOBS.SERVICE_ID }, false);
     public static final Index IX_SERVICE_CONNECTIONS_SERVICE_ID = Internal.createIndex(DSL.name("ix_service_connections_service_id"), ServiceConnections.SERVICE_CONNECTIONS, new OrderField[] { ServiceConnections.SERVICE_CONNECTIONS.SERVICE_ID }, false);
     public static final Index UX_JOB_STEPS_ONE_RUNNING_PER_JOB_AND_TYPE = Internal.createIndex(DSL.name("ux_job_steps_one_running_per_job_and_type"), JobSteps.JOB_STEPS, new OrderField[] { JobSteps.JOB_STEPS.JOB_ID, JobSteps.JOB_STEPS.TYPE }, true);

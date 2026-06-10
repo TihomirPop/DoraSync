@@ -34,7 +34,7 @@ public class Keys {
     public static final UniqueKey<JobStepsRecord> JOB_STEPS_PKEY = Internal.createUniqueKey(JobSteps.JOB_STEPS, DSL.name("job_steps_pkey"), new TableField[] { JobSteps.JOB_STEPS.ID }, true);
     public static final UniqueKey<JobsRecord> JOBS_PKEY = Internal.createUniqueKey(Jobs.JOBS, DSL.name("jobs_pkey"), new TableField[] { Jobs.JOBS.ID }, true);
     public static final UniqueKey<ServiceConnectionsRecord> SERVICE_CONNECTIONS_PKEY = Internal.createUniqueKey(ServiceConnections.SERVICE_CONNECTIONS, DSL.name("service_connections_pkey"), new TableField[] { ServiceConnections.SERVICE_CONNECTIONS.ID }, true);
-    public static final UniqueKey<ServiceConnectionsRecord> SERVICE_CONNECTIONS_SERVICE_ID_TYPE_EXTERNAL_REFERENCE_KEY = Internal.createUniqueKey(ServiceConnections.SERVICE_CONNECTIONS, DSL.name("service_connections_service_id_type_external_reference_key"), new TableField[] { ServiceConnections.SERVICE_CONNECTIONS.SERVICE_ID, ServiceConnections.SERVICE_CONNECTIONS.TYPE, ServiceConnections.SERVICE_CONNECTIONS.EXTERNAL_REFERENCE }, true);
+    public static final UniqueKey<ServiceConnectionsRecord> SERVICE_CONNECTIONS_SERVICE_ID_TYPE_KEY = Internal.createUniqueKey(ServiceConnections.SERVICE_CONNECTIONS, DSL.name("service_connections_service_id_type_key"), new TableField[] { ServiceConnections.SERVICE_CONNECTIONS.SERVICE_ID, ServiceConnections.SERVICE_CONNECTIONS.TYPE }, true);
     public static final UniqueKey<ServicesRecord> SERVICES_PKEY = Internal.createUniqueKey(Services.SERVICES, DSL.name("services_pkey"), new TableField[] { Services.SERVICES.ID }, true);
 
     // -------------------------------------------------------------------------
