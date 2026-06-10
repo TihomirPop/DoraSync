@@ -35,8 +35,8 @@ public class DomainConfiguration {
     }
 
     @Bean
-    StaleJobReaper staleJobReaper(ReapStaleJobsPort reapStaleJobsPort) {
-        return new StaleJobReaper(reapStaleJobsPort);
+    StaleJobReaper staleJobReaper(TransactionRunnerPort transactionRunnerPort, ReapStaleJobsPort reapStaleJobsPort) {
+        return new StaleJobReaper(transactionRunnerPort, reapStaleJobsPort);
     }
 
 }

@@ -1,17 +1,31 @@
 package hr.tvz.popovic.dorasync.application.port.out;
 
+import hr.tvz.popovic.dorasync.application.domain.model.Id;
+
 import java.time.Instant;
+import java.util.List;
 
 public interface ReapStaleJobsPort {
 
-    Result reap(Instant now);
+    ReapJobsResult reapJobs(Instant now);
 
-    sealed interface Result {
+    ReapJobStepsResult reapJobSteps(List<Id> jobIds);
 
-        record Success(int reapedCount) implements Result {
+    sealed interface ReapJobsResult {
+
+        record Success(List<Id> jobIds) implements ReapJobsResult {
         }
 
-        record Failure(Exception cause) implements Result {
+        record Failure(Exception cause) implements ReapJobsResult {
+        }
+    }
+
+    sealed interface ReapJobStepsResult {
+
+        record Success(int reapedCount) implements ReapJobStepsResult {
+        }
+
+        record Failure(Exception cause) implements ReapJobStepsResult {
         }
     }
 
