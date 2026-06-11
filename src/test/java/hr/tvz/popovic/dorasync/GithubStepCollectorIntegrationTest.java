@@ -12,6 +12,7 @@ import hr.tvz.popovic.dorasync.application.domain.model.CommitCursor;
 import hr.tvz.popovic.dorasync.application.domain.model.FullName;
 import hr.tvz.popovic.dorasync.application.domain.model.GitIdentity;
 import hr.tvz.popovic.dorasync.application.domain.model.Id;
+import hr.tvz.popovic.dorasync.application.domain.model.Maybe;
 import hr.tvz.popovic.dorasync.application.domain.model.Sha;
 import hr.tvz.popovic.dorasync.application.port.in.WorkJobStepsUseCase;
 import hr.tvz.popovic.dorasync.application.port.out.FetchGithubHistoryPort;
@@ -167,8 +168,8 @@ class GithubStepCollectorIntegrationTest {
                 "message " + sha,
                 committedAt,
                 committedAt,
-                new GitIdentity("Author " + sha, sha + "@example.com"),
-                new GitIdentity("Committer " + sha, sha + "@example.com"),
+                new Maybe.Some<>(new GitIdentity(Maybe.of("Author " + sha), Maybe.of(sha + "@example.com"))),
+                new Maybe.Some<>(new GitIdentity(Maybe.of("Committer " + sha), Maybe.of(sha + "@example.com"))),
                 10,
                 2
         );

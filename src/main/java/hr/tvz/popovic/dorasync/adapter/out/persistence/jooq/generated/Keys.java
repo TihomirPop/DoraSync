@@ -4,15 +4,21 @@
 package hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated;
 
 
+import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.BuildStages;
+import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.Builds;
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.Commits;
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.JobSteps;
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.Jobs;
+import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.Pipelines;
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.Repositories;
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.ServiceConnections;
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.Services;
+import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.records.BuildStagesRecord;
+import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.records.BuildsRecord;
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.records.CommitsRecord;
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.records.JobStepsRecord;
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.records.JobsRecord;
+import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.records.PipelinesRecord;
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.records.RepositoriesRecord;
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.records.ServiceConnectionsRecord;
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.records.ServicesRecord;
@@ -35,10 +41,16 @@ public class Keys {
     // UNIQUE and PRIMARY KEY definitions
     // -------------------------------------------------------------------------
 
+    public static final UniqueKey<BuildStagesRecord> BUILD_STAGES_BUILD_ID_STAGE_ORDER_KEY = Internal.createUniqueKey(BuildStages.BUILD_STAGES, DSL.name("build_stages_build_id_stage_order_key"), new TableField[] { BuildStages.BUILD_STAGES.BUILD_ID, BuildStages.BUILD_STAGES.STAGE_ORDER }, true);
+    public static final UniqueKey<BuildStagesRecord> BUILD_STAGES_PKEY = Internal.createUniqueKey(BuildStages.BUILD_STAGES, DSL.name("build_stages_pkey"), new TableField[] { BuildStages.BUILD_STAGES.ID }, true);
+    public static final UniqueKey<BuildsRecord> BUILDS_PIPELINE_ID_BUILD_NUMBER_KEY = Internal.createUniqueKey(Builds.BUILDS, DSL.name("builds_pipeline_id_build_number_key"), new TableField[] { Builds.BUILDS.PIPELINE_ID, Builds.BUILDS.BUILD_NUMBER }, true);
+    public static final UniqueKey<BuildsRecord> BUILDS_PKEY = Internal.createUniqueKey(Builds.BUILDS, DSL.name("builds_pkey"), new TableField[] { Builds.BUILDS.ID }, true);
     public static final UniqueKey<CommitsRecord> COMMITS_PKEY = Internal.createUniqueKey(Commits.COMMITS, DSL.name("commits_pkey"), new TableField[] { Commits.COMMITS.ID }, true);
     public static final UniqueKey<CommitsRecord> COMMITS_REPOSITORY_ID_SHA_KEY = Internal.createUniqueKey(Commits.COMMITS, DSL.name("commits_repository_id_sha_key"), new TableField[] { Commits.COMMITS.REPOSITORY_ID, Commits.COMMITS.SHA }, true);
     public static final UniqueKey<JobStepsRecord> JOB_STEPS_PKEY = Internal.createUniqueKey(JobSteps.JOB_STEPS, DSL.name("job_steps_pkey"), new TableField[] { JobSteps.JOB_STEPS.ID }, true);
     public static final UniqueKey<JobsRecord> JOBS_PKEY = Internal.createUniqueKey(Jobs.JOBS, DSL.name("jobs_pkey"), new TableField[] { Jobs.JOBS.ID }, true);
+    public static final UniqueKey<PipelinesRecord> PIPELINES_PKEY = Internal.createUniqueKey(Pipelines.PIPELINES, DSL.name("pipelines_pkey"), new TableField[] { Pipelines.PIPELINES.ID }, true);
+    public static final UniqueKey<PipelinesRecord> PIPELINES_SERVICE_CONNECTION_ID_KEY = Internal.createUniqueKey(Pipelines.PIPELINES, DSL.name("pipelines_service_connection_id_key"), new TableField[] { Pipelines.PIPELINES.SERVICE_CONNECTION_ID }, true);
     public static final UniqueKey<RepositoriesRecord> REPOSITORIES_PKEY = Internal.createUniqueKey(Repositories.REPOSITORIES, DSL.name("repositories_pkey"), new TableField[] { Repositories.REPOSITORIES.ID }, true);
     public static final UniqueKey<RepositoriesRecord> REPOSITORIES_SERVICE_CONNECTION_ID_KEY = Internal.createUniqueKey(Repositories.REPOSITORIES, DSL.name("repositories_service_connection_id_key"), new TableField[] { Repositories.REPOSITORIES.SERVICE_CONNECTION_ID }, true);
     public static final UniqueKey<ServiceConnectionsRecord> SERVICE_CONNECTIONS_PKEY = Internal.createUniqueKey(ServiceConnections.SERVICE_CONNECTIONS, DSL.name("service_connections_pkey"), new TableField[] { ServiceConnections.SERVICE_CONNECTIONS.ID }, true);
@@ -49,9 +61,12 @@ public class Keys {
     // FOREIGN KEY definitions
     // -------------------------------------------------------------------------
 
+    public static final ForeignKey<BuildStagesRecord, BuildsRecord> BUILD_STAGES__BUILD_STAGES_BUILD_ID_FKEY = Internal.createForeignKey(BuildStages.BUILD_STAGES, DSL.name("build_stages_build_id_fkey"), new TableField[] { BuildStages.BUILD_STAGES.BUILD_ID }, Keys.BUILDS_PKEY, new TableField[] { Builds.BUILDS.ID }, true);
+    public static final ForeignKey<BuildsRecord, PipelinesRecord> BUILDS__BUILDS_PIPELINE_ID_FKEY = Internal.createForeignKey(Builds.BUILDS, DSL.name("builds_pipeline_id_fkey"), new TableField[] { Builds.BUILDS.PIPELINE_ID }, Keys.PIPELINES_PKEY, new TableField[] { Pipelines.PIPELINES.ID }, true);
     public static final ForeignKey<CommitsRecord, RepositoriesRecord> COMMITS__COMMITS_REPOSITORY_ID_FKEY = Internal.createForeignKey(Commits.COMMITS, DSL.name("commits_repository_id_fkey"), new TableField[] { Commits.COMMITS.REPOSITORY_ID }, Keys.REPOSITORIES_PKEY, new TableField[] { Repositories.REPOSITORIES.ID }, true);
     public static final ForeignKey<JobStepsRecord, JobsRecord> JOB_STEPS__JOB_STEPS_JOB_ID_FKEY = Internal.createForeignKey(JobSteps.JOB_STEPS, DSL.name("job_steps_job_id_fkey"), new TableField[] { JobSteps.JOB_STEPS.JOB_ID }, Keys.JOBS_PKEY, new TableField[] { Jobs.JOBS.ID }, true);
     public static final ForeignKey<JobsRecord, ServicesRecord> JOBS__JOBS_SERVICE_ID_FKEY = Internal.createForeignKey(Jobs.JOBS, DSL.name("jobs_service_id_fkey"), new TableField[] { Jobs.JOBS.SERVICE_ID }, Keys.SERVICES_PKEY, new TableField[] { Services.SERVICES.ID }, true);
+    public static final ForeignKey<PipelinesRecord, ServiceConnectionsRecord> PIPELINES__PIPELINES_SERVICE_CONNECTION_ID_FKEY = Internal.createForeignKey(Pipelines.PIPELINES, DSL.name("pipelines_service_connection_id_fkey"), new TableField[] { Pipelines.PIPELINES.SERVICE_CONNECTION_ID }, Keys.SERVICE_CONNECTIONS_PKEY, new TableField[] { ServiceConnections.SERVICE_CONNECTIONS.ID }, true);
     public static final ForeignKey<RepositoriesRecord, ServiceConnectionsRecord> REPOSITORIES__REPOSITORIES_SERVICE_CONNECTION_ID_FKEY = Internal.createForeignKey(Repositories.REPOSITORIES, DSL.name("repositories_service_connection_id_fkey"), new TableField[] { Repositories.REPOSITORIES.SERVICE_CONNECTION_ID }, Keys.SERVICE_CONNECTIONS_PKEY, new TableField[] { ServiceConnections.SERVICE_CONNECTIONS.ID }, true);
     public static final ForeignKey<ServiceConnectionsRecord, ServicesRecord> SERVICE_CONNECTIONS__SERVICE_CONNECTIONS_SERVICE_ID_FKEY = Internal.createForeignKey(ServiceConnections.SERVICE_CONNECTIONS, DSL.name("service_connections_service_id_fkey"), new TableField[] { ServiceConnections.SERVICE_CONNECTIONS.SERVICE_ID }, Keys.SERVICES_PKEY, new TableField[] { Services.SERVICES.ID }, true);
 }

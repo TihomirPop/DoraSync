@@ -5,6 +5,7 @@ import hr.tvz.popovic.dorasync.application.domain.model.CommitCursor;
 import hr.tvz.popovic.dorasync.application.domain.model.FullName;
 import hr.tvz.popovic.dorasync.application.domain.model.GitIdentity;
 import hr.tvz.popovic.dorasync.application.domain.model.Id;
+import hr.tvz.popovic.dorasync.application.domain.model.Maybe;
 import hr.tvz.popovic.dorasync.application.port.out.GithubRepositoryPort;
 import org.jooq.DSLContext;
 import org.jooq.Query;
@@ -94,9 +95,6 @@ public class GithubRepository implements GithubRepositoryPort {
     }
 
     private Query insert(Id repositoryId, Commit commit) {
-        var author = identityOrEmpty(commit.author());
-        var committer = identityOrEmpty(commit.committer());
-
         return dsl.insertInto(COMMITS)
                 .columns(
                         COMMITS.REPOSITORY_ID,
@@ -117,10 +115,10 @@ public class GithubRepository implements GithubRepositoryPort {
                         commit.message(),
                         OffsetDateTime.ofInstant(commit.authoredAt(), ZoneOffset.UTC),
                         OffsetDateTime.ofInstant(commit.committedAt(), ZoneOffset.UTC),
-                        author.name(),
-                        author.email(),
-                        committer.name(),
-                        committer.email(),
+                        name(commit.author()),
+                        email(commit.author()),
+                        name(commit.committer()),
+                        email(commit.committer()),
                         commit.additions(),
                         commit.deletions()
                 )
@@ -128,7 +126,24 @@ public class GithubRepository implements GithubRepositoryPort {
                 .doNothing();
     }
 
-    private static GitIdentity identityOrEmpty(GitIdentity identity) {
-        return identity == null ? new GitIdentity(null, null) : identity;
+    private static String name(Maybe<GitIdentity> identity) {
+        return switch (identity) {
+            case Maybe.Some<GitIdentity>(var value) -> orNull(value.name());
+            case Maybe.None<GitIdentity>() -> null;
+        };
+    }
+
+    private static String email(Maybe<GitIdentity> identity) {
+        return switch (identity) {
+            case Maybe.Some<GitIdentity>(var value) -> orNull(value.email());
+            case Maybe.None<GitIdentity>() -> null;
+        };
+    }
+
+    private static String orNull(Maybe<String> value) {
+        return switch (value) {
+            case Maybe.Some<String>(var string) -> string;
+            case Maybe.None<String>() -> null;
+        };
     }
 }

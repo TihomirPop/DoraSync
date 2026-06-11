@@ -8,6 +8,7 @@ import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.Indexes;
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.Keys;
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.Public;
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.enums.ServiceConnectionType;
+import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.Pipelines.PipelinesPath;
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.Repositories.RepositoriesPath;
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.Services.ServicesPath;
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.records.ServiceConnectionsRecord;
@@ -178,6 +179,19 @@ public class ServiceConnections extends TableImpl<ServiceConnectionsRecord> {
             _services = new ServicesPath(this, Keys.SERVICE_CONNECTIONS__SERVICE_CONNECTIONS_SERVICE_ID_FKEY, null);
 
         return _services;
+    }
+
+    private transient PipelinesPath _pipelines;
+
+    /**
+     * Get the implicit to-many join path to the <code>public.pipelines</code>
+     * table
+     */
+    public PipelinesPath pipelines() {
+        if (_pipelines == null)
+            _pipelines = new PipelinesPath(this, null, Keys.PIPELINES__PIPELINES_SERVICE_CONNECTION_ID_FKEY.getInverseKey());
+
+        return _pipelines;
     }
 
     private transient RepositoriesPath _repositories;

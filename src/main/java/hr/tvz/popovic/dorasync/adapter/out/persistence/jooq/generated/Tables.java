@@ -4,9 +4,12 @@
 package hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated;
 
 
+import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.BuildStages;
+import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.Builds;
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.Commits;
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.JobSteps;
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.Jobs;
+import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.Pipelines;
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.Repositories;
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.ServiceConnections;
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.Services;
@@ -17,6 +20,16 @@ import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.Ser
  */
 @SuppressWarnings({ "all", "unchecked", "rawtypes", "this-escape" })
 public class Tables {
+
+    /**
+     * The table <code>public.build_stages</code>.
+     */
+    public static final BuildStages BUILD_STAGES = BuildStages.BUILD_STAGES;
+
+    /**
+     * The table <code>public.builds</code>.
+     */
+    public static final Builds BUILDS = Builds.BUILDS;
 
     /**
      * The table <code>public.commits</code>.
@@ -32,6 +45,11 @@ public class Tables {
      * The table <code>public.jobs</code>.
      */
     public static final Jobs JOBS = Jobs.JOBS;
+
+    /**
+     * The table <code>public.pipelines</code>.
+     */
+    public static final Pipelines PIPELINES = Pipelines.PIPELINES;
 
     /**
      * The table <code>public.repositories</code>.

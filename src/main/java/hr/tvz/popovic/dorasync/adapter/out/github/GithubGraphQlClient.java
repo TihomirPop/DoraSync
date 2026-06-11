@@ -4,6 +4,7 @@ import hr.tvz.popovic.dorasync.application.domain.model.Commit;
 import hr.tvz.popovic.dorasync.application.domain.model.CommitCursor;
 import hr.tvz.popovic.dorasync.application.domain.model.FullName;
 import hr.tvz.popovic.dorasync.application.domain.model.GitIdentity;
+import hr.tvz.popovic.dorasync.application.domain.model.Maybe;
 import hr.tvz.popovic.dorasync.application.domain.model.Sha;
 import hr.tvz.popovic.dorasync.application.port.out.FetchGithubHistoryPort;
 import org.springframework.beans.factory.annotation.Value;
@@ -122,13 +123,15 @@ public class GithubGraphQlClient implements FetchGithubHistoryPort {
                 node.committedDate().toInstant(),
                 toIdentity(node.author()),
                 toIdentity(node.committer()),
-                node.additions(),
-                node.deletions()
+                node.additions() == null ? 0 : node.additions(),
+                node.deletions() == null ? 0 : node.deletions()
         );
     }
 
-    private static GitIdentity toIdentity(Signature signature) {
-        return signature == null ? null : new GitIdentity(signature.name(), signature.email());
+    private static Maybe<GitIdentity> toIdentity(Signature signature) {
+        return signature == null
+                ? new Maybe.None<>()
+                : new Maybe.Some<>(new GitIdentity(Maybe.of(signature.name()), Maybe.of(signature.email())));
     }
 
     private record DefaultBranchRef(String name, Target target) {

@@ -9,15 +9,18 @@ public record Commit(
         String message,
         Instant authoredAt,
         Instant committedAt,
-        GitIdentity author,
-        GitIdentity committer,
-        Integer additions,
-        Integer deletions
+        Maybe<GitIdentity> author,
+        Maybe<GitIdentity> committer,
+        int additions,
+        int deletions
 ) {
 
     public Commit {
         requireNonNull(sha, "sha must not be null");
+        requireNonNull(message, "message must not be null");
         requireNonNull(authoredAt, "authoredAt must not be null");
         requireNonNull(committedAt, "committedAt must not be null");
+        requireNonNull(author, "author must not be null");
+        requireNonNull(committer, "committer must not be null");
     }
 }

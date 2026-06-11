@@ -4,6 +4,7 @@
 package hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated;
 
 
+import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.Builds;
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.Commits;
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.JobSteps;
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.Jobs;
@@ -25,6 +26,7 @@ public class Indexes {
     // INDEX definitions
     // -------------------------------------------------------------------------
 
+    public static final Index IX_BUILDS_PIPELINE_BUILD_NUMBER = Internal.createIndex(DSL.name("ix_builds_pipeline_build_number"), Builds.BUILDS, new OrderField[] { Builds.BUILDS.PIPELINE_ID, Builds.BUILDS.BUILD_NUMBER }, false);
     public static final Index IX_COMMITS_REPOSITORY_COMMITTED_AT = Internal.createIndex(DSL.name("ix_commits_repository_committed_at"), Commits.COMMITS, new OrderField[] { Commits.COMMITS.REPOSITORY_ID, Commits.COMMITS.COMMITTED_AT }, false);
     public static final Index IX_JOB_STEPS_JOB_ID = Internal.createIndex(DSL.name("ix_job_steps_job_id"), JobSteps.JOB_STEPS, new OrderField[] { JobSteps.JOB_STEPS.JOB_ID }, false);
     public static final Index IX_JOB_STEPS_PENDING = Internal.createIndex(DSL.name("ix_job_steps_pending"), JobSteps.JOB_STEPS, new OrderField[] { JobSteps.JOB_STEPS.ID }, false);

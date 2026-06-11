@@ -10,7 +10,9 @@ import hr.tvz.popovic.dorasync.application.port.out.AddJobStepPort;
 import hr.tvz.popovic.dorasync.application.port.out.DequeueJobStepsPort;
 import hr.tvz.popovic.dorasync.application.port.out.FetchConnectionPort;
 import hr.tvz.popovic.dorasync.application.port.out.FetchGithubHistoryPort;
+import hr.tvz.popovic.dorasync.application.port.out.FetchJenkinsBuildsPort;
 import hr.tvz.popovic.dorasync.application.port.out.GithubRepositoryPort;
+import hr.tvz.popovic.dorasync.application.port.out.JenkinsRepositoryPort;
 import hr.tvz.popovic.dorasync.application.port.out.FetchScheduledServicesPort;
 import hr.tvz.popovic.dorasync.application.port.out.FetchServiceConnectionsPort;
 import hr.tvz.popovic.dorasync.application.port.out.FinishJobPort;
@@ -67,8 +69,18 @@ public class DomainConfiguration {
     }
 
     @Bean
-    JenkinsStepCollector jenkinsStepCollector(FetchConnectionPort fetchConnectionPort) {
-        return new JenkinsStepCollector(fetchConnectionPort);
+    JenkinsStepCollector jenkinsStepCollector(
+            FetchConnectionPort fetchConnectionPort,
+            FetchJenkinsBuildsPort fetchJenkinsBuildsPort,
+            JenkinsRepositoryPort jenkinsRepositoryPort,
+            TransactionRunnerPort transactionRunnerPort
+    ) {
+        return new JenkinsStepCollector(
+                fetchConnectionPort,
+                fetchJenkinsBuildsPort,
+                jenkinsRepositoryPort,
+                transactionRunnerPort
+        );
     }
 
     @Bean
