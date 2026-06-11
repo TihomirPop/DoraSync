@@ -17,6 +17,8 @@ dora-sync:
     base-url: ${JENKINS_BASE_URL:http://homeserver:8050}
     username: ${JENKINS_USERNAME:}
     api-token: ${JENKINS_API_TOKEN:}
+  deployko:
+    base-url: ${DEPLOYKO_BASE_URL:http://homeserver:8056}
   scheduled-job-enqueuer:
     fixed-rate: 1m
   stale-job-reaper:

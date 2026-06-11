@@ -14,6 +14,7 @@ import hr.tvz.popovic.dorasync.application.domain.model.JobStep;
 import hr.tvz.popovic.dorasync.application.port.in.WorkJobStepsUseCase;
 import hr.tvz.popovic.dorasync.application.port.out.DequeueJobStepsPort;
 import hr.tvz.popovic.dorasync.application.port.out.FetchConnectionPort;
+import hr.tvz.popovic.dorasync.application.port.out.FetchDeploykoDeploymentsPort;
 import hr.tvz.popovic.dorasync.application.port.out.FetchGithubHistoryPort;
 import hr.tvz.popovic.dorasync.application.port.out.FetchJenkinsBuildsPort;
 import hr.tvz.popovic.dorasync.application.port.out.FinishJobPort;
@@ -38,6 +39,8 @@ import java.util.UUID;
 import static hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.BuildStages.BUILD_STAGES;
 import static hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.Builds.BUILDS;
 import static hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.Commits.COMMITS;
+import static hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.DeploymentTargets.DEPLOYMENT_TARGETS;
+import static hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.Deployments.DEPLOYMENTS;
 import static hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.JobSteps.JOB_STEPS;
 import static hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.Pipelines.PIPELINES;
 import static hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.Repositories.REPOSITORIES;
@@ -70,6 +73,12 @@ class JobStepWorkerIntegrationTest {
         @Primary
         FetchJenkinsBuildsPort noopFetchJenkinsBuildsPort() {
             return (jobPath, cursor) -> new FetchJenkinsBuildsPort.Result.Success(List.of());
+        }
+
+        @Bean
+        @Primary
+        FetchDeploykoDeploymentsPort noopFetchDeploykoDeploymentsPort() {
+            return (service, cursor) -> new FetchDeploykoDeploymentsPort.Result.Success(List.of());
         }
     }
 
@@ -107,6 +116,8 @@ class JobStepWorkerIntegrationTest {
         dsl.deleteFrom(BUILD_STAGES).execute();
         dsl.deleteFrom(BUILDS).execute();
         dsl.deleteFrom(PIPELINES).execute();
+        dsl.deleteFrom(DEPLOYMENTS).execute();
+        dsl.deleteFrom(DEPLOYMENT_TARGETS).execute();
         dsl.deleteFrom(JOB_STEPS).execute();
         dsl.deleteFrom(JOBS).execute();
         dsl.deleteFrom(SERVICE_CONNECTIONS).execute();

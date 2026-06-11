@@ -7,6 +7,8 @@ package hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated;
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.BuildStages;
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.Builds;
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.Commits;
+import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.DeploymentTargets;
+import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.Deployments;
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.JobSteps;
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.Jobs;
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.Pipelines;
@@ -49,6 +51,16 @@ public class Public extends SchemaImpl {
      * The table <code>public.commits</code>.
      */
     public final Commits COMMITS = Commits.COMMITS;
+
+    /**
+     * The table <code>public.deployment_targets</code>.
+     */
+    public final DeploymentTargets DEPLOYMENT_TARGETS = DeploymentTargets.DEPLOYMENT_TARGETS;
+
+    /**
+     * The table <code>public.deployments</code>.
+     */
+    public final Deployments DEPLOYMENTS = Deployments.DEPLOYMENTS;
 
     /**
      * The table <code>public.job_steps</code>.
@@ -99,6 +111,8 @@ public class Public extends SchemaImpl {
             BuildStages.BUILD_STAGES,
             Builds.BUILDS,
             Commits.COMMITS,
+            DeploymentTargets.DEPLOYMENT_TARGETS,
+            Deployments.DEPLOYMENTS,
             JobSteps.JOB_STEPS,
             Jobs.JOBS,
             Pipelines.PIPELINES,

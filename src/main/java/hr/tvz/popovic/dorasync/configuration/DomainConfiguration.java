@@ -7,8 +7,10 @@ import hr.tvz.popovic.dorasync.application.domain.service.JobStepWorker;
 import hr.tvz.popovic.dorasync.application.domain.service.ScheduledJobEnqueuer;
 import hr.tvz.popovic.dorasync.application.domain.service.StaleJobReaper;
 import hr.tvz.popovic.dorasync.application.port.out.AddJobStepPort;
+import hr.tvz.popovic.dorasync.application.port.out.DeploykoRepositoryPort;
 import hr.tvz.popovic.dorasync.application.port.out.DequeueJobStepsPort;
 import hr.tvz.popovic.dorasync.application.port.out.FetchConnectionPort;
+import hr.tvz.popovic.dorasync.application.port.out.FetchDeploykoDeploymentsPort;
 import hr.tvz.popovic.dorasync.application.port.out.FetchGithubHistoryPort;
 import hr.tvz.popovic.dorasync.application.port.out.FetchJenkinsBuildsPort;
 import hr.tvz.popovic.dorasync.application.port.out.GithubRepositoryPort;
@@ -84,8 +86,18 @@ public class DomainConfiguration {
     }
 
     @Bean
-    DeploykoStepCollector deploykoStepCollector(FetchConnectionPort fetchConnectionPort) {
-        return new DeploykoStepCollector(fetchConnectionPort);
+    DeploykoStepCollector deploykoStepCollector(
+            FetchConnectionPort fetchConnectionPort,
+            FetchDeploykoDeploymentsPort fetchDeploykoDeploymentsPort,
+            DeploykoRepositoryPort deploykoRepositoryPort,
+            TransactionRunnerPort transactionRunnerPort
+    ) {
+        return new DeploykoStepCollector(
+                fetchConnectionPort,
+                fetchDeploykoDeploymentsPort,
+                deploykoRepositoryPort,
+                transactionRunnerPort
+        );
     }
 
     @Bean
