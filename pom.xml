@@ -112,6 +112,17 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <image>
+                        <env>
+                            <BP_OCI_REVISION>${git.commit.sha}</BP_OCI_REVISION>
+                            <BP_IMAGE_LABELS>
+                                org.opencontainers.image.revision=${git.commit.sha}
+                                org.opencontainers.image.source=${git.repo.url}
+                            </BP_IMAGE_LABELS>
+                        </env>
+                    </image>
+                </configuration>
             </plugin>
         </plugins>
     </build>
