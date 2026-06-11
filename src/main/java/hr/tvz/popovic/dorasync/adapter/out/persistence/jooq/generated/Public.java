@@ -4,8 +4,10 @@
 package hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated;
 
 
+import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.Commits;
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.JobSteps;
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.Jobs;
+import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.Repositories;
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.ServiceConnections;
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.Services;
 
@@ -31,6 +33,11 @@ public class Public extends SchemaImpl {
     public static final Public PUBLIC = new Public();
 
     /**
+     * The table <code>public.commits</code>.
+     */
+    public final Commits COMMITS = Commits.COMMITS;
+
+    /**
      * The table <code>public.job_steps</code>.
      */
     public final JobSteps JOB_STEPS = JobSteps.JOB_STEPS;
@@ -39,6 +46,11 @@ public class Public extends SchemaImpl {
      * The table <code>public.jobs</code>.
      */
     public final Jobs JOBS = Jobs.JOBS;
+
+    /**
+     * The table <code>public.repositories</code>.
+     */
+    public final Repositories REPOSITORIES = Repositories.REPOSITORIES;
 
     /**
      * The table <code>public.service_connections</code>.
@@ -66,8 +78,10 @@ public class Public extends SchemaImpl {
     @Override
     public final List<Table<?>> getTables() {
         return Arrays.asList(
+            Commits.COMMITS,
             JobSteps.JOB_STEPS,
             Jobs.JOBS,
+            Repositories.REPOSITORIES,
             ServiceConnections.SERVICE_CONNECTIONS,
             Services.SERVICES
         );
