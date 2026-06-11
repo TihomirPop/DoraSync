@@ -14,6 +14,7 @@ import hr.tvz.popovic.dorasync.application.domain.model.JobStep;
 import hr.tvz.popovic.dorasync.application.port.in.WorkJobStepsUseCase;
 import hr.tvz.popovic.dorasync.application.port.out.DequeueJobStepsPort;
 import hr.tvz.popovic.dorasync.application.port.out.FetchConnectionPort;
+import hr.tvz.popovic.dorasync.application.port.out.FetchGithubHistoryPort;
 import hr.tvz.popovic.dorasync.application.port.out.FinishJobPort;
 import hr.tvz.popovic.dorasync.application.port.out.FinishJobStepPort;
 import hr.tvz.popovic.dorasync.application.port.out.TaskExecutorPort;
@@ -30,9 +31,12 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
+import java.util.List;
 import java.util.UUID;
 
+import static hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.Commits.COMMITS;
 import static hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.JobSteps.JOB_STEPS;
+import static hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.Repositories.REPOSITORIES;
 import static hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.Jobs.JOBS;
 import static hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.ServiceConnections.SERVICE_CONNECTIONS;
 import static hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.Services.SERVICES;
@@ -50,6 +54,12 @@ class JobStepWorkerIntegrationTest {
         @Primary
         TaskExecutorPort synchronousTaskExecutorPort() {
             return Runnable::run;
+        }
+
+        @Bean
+        @Primary
+        FetchGithubHistoryPort noopFetchGithubHistoryPort() {
+            return (fullName, cursor) -> new FetchGithubHistoryPort.Result.Success("main", List.of());
         }
     }
 
@@ -82,6 +92,8 @@ class JobStepWorkerIntegrationTest {
 
     @BeforeEach
     void cleanUp() {
+        dsl.deleteFrom(COMMITS).execute();
+        dsl.deleteFrom(REPOSITORIES).execute();
         dsl.deleteFrom(JOB_STEPS).execute();
         dsl.deleteFrom(JOBS).execute();
         dsl.deleteFrom(SERVICE_CONNECTIONS).execute();

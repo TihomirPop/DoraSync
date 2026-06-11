@@ -9,6 +9,8 @@ import hr.tvz.popovic.dorasync.application.domain.service.StaleJobReaper;
 import hr.tvz.popovic.dorasync.application.port.out.AddJobStepPort;
 import hr.tvz.popovic.dorasync.application.port.out.DequeueJobStepsPort;
 import hr.tvz.popovic.dorasync.application.port.out.FetchConnectionPort;
+import hr.tvz.popovic.dorasync.application.port.out.FetchGithubHistoryPort;
+import hr.tvz.popovic.dorasync.application.port.out.GithubRepositoryPort;
 import hr.tvz.popovic.dorasync.application.port.out.FetchScheduledServicesPort;
 import hr.tvz.popovic.dorasync.application.port.out.FetchServiceConnectionsPort;
 import hr.tvz.popovic.dorasync.application.port.out.FinishJobPort;
@@ -50,8 +52,18 @@ public class DomainConfiguration {
     }
 
     @Bean
-    GithubStepCollector githubStepCollector(FetchConnectionPort fetchConnectionPort) {
-        return new GithubStepCollector(fetchConnectionPort);
+    GithubStepCollector githubStepCollector(
+            FetchConnectionPort fetchConnectionPort,
+            FetchGithubHistoryPort fetchGithubHistoryPort,
+            GithubRepositoryPort githubRepositoryPort,
+            TransactionRunnerPort transactionRunnerPort
+    ) {
+        return new GithubStepCollector(
+                fetchConnectionPort,
+                fetchGithubHistoryPort,
+                githubRepositoryPort,
+                transactionRunnerPort
+        );
     }
 
     @Bean

@@ -15,7 +15,7 @@ public final class JenkinsStepCollector {
 
     public CollectResult collect(JobStep.CollectJenkinsStep step) {
         return switch (fetchConnectionPort.fetch(step.jobId(), ConnectionType.JENKINS)) {
-            case FetchConnectionPort.Result.Success(var serviceId, var externalReference) -> {
+            case FetchConnectionPort.Result.Success(var serviceId, var connectionId, var externalReference) -> {
                 // TODO: collect metrics from Jenkins for serviceId + externalReference.
                 yield new CollectResult.Success();
             }

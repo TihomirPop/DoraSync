@@ -24,7 +24,7 @@ public class ConnectionFetcher implements FetchConnectionPort {
     @Override
     public Result fetch(Id jobId, ConnectionType type) {
         try {
-            var record = dsl.select(JOBS.SERVICE_ID, SERVICE_CONNECTIONS.EXTERNAL_REFERENCE)
+            var record = dsl.select(JOBS.SERVICE_ID, SERVICE_CONNECTIONS.ID, SERVICE_CONNECTIONS.EXTERNAL_REFERENCE)
                     .from(JOBS)
                     .join(SERVICE_CONNECTIONS)
                     .on(SERVICE_CONNECTIONS.SERVICE_ID.eq(JOBS.SERVICE_ID))
@@ -36,7 +36,11 @@ public class ConnectionFetcher implements FetchConnectionPort {
                 return new Result.NotFound();
             }
 
-            return new Result.Success(new Id(record.value1()), new ExternalReference(record.value2()));
+            return new Result.Success(
+                    new Id(record.value1()),
+                    new Id(record.value2()),
+                    new ExternalReference(record.value3())
+            );
 
         } catch (DataAccessException e) {
             return new Result.Failure(e);

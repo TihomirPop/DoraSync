@@ -10,7 +10,7 @@ public interface FetchConnectionPort {
 
     sealed interface Result {
 
-        record Success(Id serviceId, ExternalReference externalReference) implements Result {
+        record Success(Id serviceId, Id connectionId, ExternalReference externalReference) implements Result {
         }
 
         record NotFound() implements Result {

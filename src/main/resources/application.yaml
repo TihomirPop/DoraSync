@@ -2,7 +2,7 @@ spring:
   application:
     name: DoraSync
   datasource:
-    url: ${DATASOURCE_URL:jdbc:postgresql://localhost:5432/dora}
+    url: ${DATASOURCE_URL:jdbc:postgresql://homeserver:8059/dora}
     username: ${DATASOURCE_USERNAME:dora}
     password: ${DATASOURCE_PASSWORD:dora}
   threads:
@@ -10,6 +10,9 @@ spring:
       enabled: true
 
 dora-sync:
+  github:
+    graphql-url: ${GITHUB_GRAPHQL_URL:https://api.github.com/graphql}
+    token: ${GITHUB_TOKEN}
   scheduled-job-enqueuer:
     fixed-rate: 1m
   stale-job-reaper:

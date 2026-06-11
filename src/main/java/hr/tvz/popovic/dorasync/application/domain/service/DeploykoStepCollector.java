@@ -15,7 +15,7 @@ public final class DeploykoStepCollector {
 
     public CollectResult collect(JobStep.CollectDeploykoStep step) {
         return switch (fetchConnectionPort.fetch(step.jobId(), ConnectionType.DEPLOYKO)) {
-            case FetchConnectionPort.Result.Success(var serviceId, var externalReference) -> {
+            case FetchConnectionPort.Result.Success(var serviceId, var connectionId, var externalReference) -> {
                 // TODO: collect metrics from Deployko for serviceId + externalReference.
                 yield new CollectResult.Success();
             }
