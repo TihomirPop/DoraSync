@@ -15,6 +15,7 @@ import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.Pip
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.Repositories;
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.ServiceConnections;
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.Services;
+import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.TimeToRestore;
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.records.BuildStagesRecord;
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.records.BuildsRecord;
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.records.CommitsRecord;
@@ -26,6 +27,7 @@ import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.rec
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.records.RepositoriesRecord;
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.records.ServiceConnectionsRecord;
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.records.ServicesRecord;
+import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.records.TimeToRestoreRecord;
 
 import org.jooq.ForeignKey;
 import org.jooq.TableField;
@@ -64,6 +66,7 @@ public class Keys {
     public static final UniqueKey<ServiceConnectionsRecord> SERVICE_CONNECTIONS_PKEY = Internal.createUniqueKey(ServiceConnections.SERVICE_CONNECTIONS, DSL.name("service_connections_pkey"), new TableField[] { ServiceConnections.SERVICE_CONNECTIONS.ID }, true);
     public static final UniqueKey<ServiceConnectionsRecord> SERVICE_CONNECTIONS_SERVICE_ID_TYPE_KEY = Internal.createUniqueKey(ServiceConnections.SERVICE_CONNECTIONS, DSL.name("service_connections_service_id_type_key"), new TableField[] { ServiceConnections.SERVICE_CONNECTIONS.SERVICE_ID, ServiceConnections.SERVICE_CONNECTIONS.TYPE }, true);
     public static final UniqueKey<ServicesRecord> SERVICES_PKEY = Internal.createUniqueKey(Services.SERVICES, DSL.name("services_pkey"), new TableField[] { Services.SERVICES.ID }, true);
+    public static final UniqueKey<TimeToRestoreRecord> TIME_TO_RESTORE_PKEY = Internal.createUniqueKey(TimeToRestore.TIME_TO_RESTORE, DSL.name("time_to_restore_pkey"), new TableField[] { TimeToRestore.TIME_TO_RESTORE.FAILED_DEPLOYMENT_ID }, true);
 
     // -------------------------------------------------------------------------
     // FOREIGN KEY definitions
@@ -79,4 +82,7 @@ public class Keys {
     public static final ForeignKey<PipelinesRecord, ServiceConnectionsRecord> PIPELINES__PIPELINES_SERVICE_CONNECTION_ID_FKEY = Internal.createForeignKey(Pipelines.PIPELINES, DSL.name("pipelines_service_connection_id_fkey"), new TableField[] { Pipelines.PIPELINES.SERVICE_CONNECTION_ID }, Keys.SERVICE_CONNECTIONS_PKEY, new TableField[] { ServiceConnections.SERVICE_CONNECTIONS.ID }, true);
     public static final ForeignKey<RepositoriesRecord, ServiceConnectionsRecord> REPOSITORIES__REPOSITORIES_SERVICE_CONNECTION_ID_FKEY = Internal.createForeignKey(Repositories.REPOSITORIES, DSL.name("repositories_service_connection_id_fkey"), new TableField[] { Repositories.REPOSITORIES.SERVICE_CONNECTION_ID }, Keys.SERVICE_CONNECTIONS_PKEY, new TableField[] { ServiceConnections.SERVICE_CONNECTIONS.ID }, true);
     public static final ForeignKey<ServiceConnectionsRecord, ServicesRecord> SERVICE_CONNECTIONS__SERVICE_CONNECTIONS_SERVICE_ID_FKEY = Internal.createForeignKey(ServiceConnections.SERVICE_CONNECTIONS, DSL.name("service_connections_service_id_fkey"), new TableField[] { ServiceConnections.SERVICE_CONNECTIONS.SERVICE_ID }, Keys.SERVICES_PKEY, new TableField[] { Services.SERVICES.ID }, true);
+    public static final ForeignKey<TimeToRestoreRecord, DeploymentTargetsRecord> TIME_TO_RESTORE__TIME_TO_RESTORE_DEPLOYMENT_TARGET_ID_FKEY = Internal.createForeignKey(TimeToRestore.TIME_TO_RESTORE, DSL.name("time_to_restore_deployment_target_id_fkey"), new TableField[] { TimeToRestore.TIME_TO_RESTORE.DEPLOYMENT_TARGET_ID }, Keys.DEPLOYMENT_TARGETS_PKEY, new TableField[] { DeploymentTargets.DEPLOYMENT_TARGETS.ID }, true);
+    public static final ForeignKey<TimeToRestoreRecord, DeploymentsRecord> TIME_TO_RESTORE__TIME_TO_RESTORE_FAILED_DEPLOYMENT_ID_FKEY = Internal.createForeignKey(TimeToRestore.TIME_TO_RESTORE, DSL.name("time_to_restore_failed_deployment_id_fkey"), new TableField[] { TimeToRestore.TIME_TO_RESTORE.FAILED_DEPLOYMENT_ID }, Keys.DEPLOYMENTS_PKEY, new TableField[] { Deployments.DEPLOYMENTS.ID }, true);
+    public static final ForeignKey<TimeToRestoreRecord, DeploymentsRecord> TIME_TO_RESTORE__TIME_TO_RESTORE_RESTORED_DEPLOYMENT_ID_FKEY = Internal.createForeignKey(TimeToRestore.TIME_TO_RESTORE, DSL.name("time_to_restore_restored_deployment_id_fkey"), new TableField[] { TimeToRestore.TIME_TO_RESTORE.RESTORED_DEPLOYMENT_ID }, Keys.DEPLOYMENTS_PKEY, new TableField[] { Deployments.DEPLOYMENTS.ID }, true);
 }

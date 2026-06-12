@@ -8,6 +8,7 @@ import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.Keys;
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.Public;
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.Deployments.DeploymentsPath;
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.ServiceConnections.ServiceConnectionsPath;
+import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.TimeToRestore.TimeToRestorePath;
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.records.DeploymentTargetsRecord;
 
 import java.util.Arrays;
@@ -179,6 +180,19 @@ public class DeploymentTargets extends TableImpl<DeploymentTargetsRecord> {
             _deployments = new DeploymentsPath(this, null, Keys.DEPLOYMENTS__DEPLOYMENTS_DEPLOYMENT_TARGET_ID_FKEY.getInverseKey());
 
         return _deployments;
+    }
+
+    private transient TimeToRestorePath _timeToRestore;
+
+    /**
+     * Get the implicit to-many join path to the
+     * <code>public.time_to_restore</code> table
+     */
+    public TimeToRestorePath timeToRestore() {
+        if (_timeToRestore == null)
+            _timeToRestore = new TimeToRestorePath(this, null, Keys.TIME_TO_RESTORE__TIME_TO_RESTORE_DEPLOYMENT_TARGET_ID_FKEY.getInverseKey());
+
+        return _timeToRestore;
     }
 
     @Override

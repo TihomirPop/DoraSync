@@ -47,6 +47,7 @@ import static hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tab
 import static hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.Jobs.JOBS;
 import static hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.ServiceConnections.SERVICE_CONNECTIONS;
 import static hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.Services.SERVICES;
+import static hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.TimeToRestore.TIME_TO_RESTORE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 
@@ -116,6 +117,7 @@ class JobStepWorkerIntegrationTest {
         dsl.deleteFrom(BUILD_STAGES).execute();
         dsl.deleteFrom(BUILDS).execute();
         dsl.deleteFrom(PIPELINES).execute();
+        dsl.deleteFrom(TIME_TO_RESTORE).execute();
         dsl.deleteFrom(DEPLOYMENTS).execute();
         dsl.deleteFrom(DEPLOYMENT_TARGETS).execute();
         dsl.deleteFrom(JOB_STEPS).execute();

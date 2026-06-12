@@ -15,6 +15,7 @@ import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.Pip
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.Repositories;
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.ServiceConnections;
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.Services;
+import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.TimeToRestore;
 
 
 /**
@@ -77,4 +78,9 @@ public class Tables {
      * The table <code>public.services</code>.
      */
     public static final Services SERVICES = Services.SERVICES;
+
+    /**
+     * The table <code>public.time_to_restore</code>.
+     */
+    public static final TimeToRestore TIME_TO_RESTORE = TimeToRestore.TIME_TO_RESTORE;
 }

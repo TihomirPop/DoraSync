@@ -15,6 +15,7 @@ import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.Pip
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.Repositories;
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.ServiceConnections;
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.Services;
+import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.TimeToRestore;
 
 import java.util.Arrays;
 import java.util.List;
@@ -93,6 +94,11 @@ public class Public extends SchemaImpl {
     public final Services SERVICES = Services.SERVICES;
 
     /**
+     * The table <code>public.time_to_restore</code>.
+     */
+    public final TimeToRestore TIME_TO_RESTORE = TimeToRestore.TIME_TO_RESTORE;
+
+    /**
      * No further instances allowed
      */
     private Public() {
@@ -118,7 +124,8 @@ public class Public extends SchemaImpl {
             Pipelines.PIPELINES,
             Repositories.REPOSITORIES,
             ServiceConnections.SERVICE_CONNECTIONS,
-            Services.SERVICES
+            Services.SERVICES,
+            TimeToRestore.TIME_TO_RESTORE
         );
     }
 }

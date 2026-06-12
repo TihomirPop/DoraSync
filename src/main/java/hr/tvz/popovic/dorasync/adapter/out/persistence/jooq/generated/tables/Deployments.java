@@ -8,6 +8,7 @@ import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.Indexes;
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.Keys;
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.Public;
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.DeploymentTargets.DeploymentTargetsPath;
+import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.TimeToRestore.TimeToRestorePath;
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.records.DeploymentsRecord;
 
 import java.time.OffsetDateTime;
@@ -193,6 +194,34 @@ public class Deployments extends TableImpl<DeploymentsRecord> {
             _deploymentTargets = new DeploymentTargetsPath(this, Keys.DEPLOYMENTS__DEPLOYMENTS_DEPLOYMENT_TARGET_ID_FKEY, null);
 
         return _deploymentTargets;
+    }
+
+    private transient TimeToRestorePath _timeToRestoreFailedDeploymentIdFkey;
+
+    /**
+     * Get the implicit to-many join path to the
+     * <code>public.time_to_restore</code> table, via the
+     * <code>time_to_restore_failed_deployment_id_fkey</code> key
+     */
+    public TimeToRestorePath timeToRestoreFailedDeploymentIdFkey() {
+        if (_timeToRestoreFailedDeploymentIdFkey == null)
+            _timeToRestoreFailedDeploymentIdFkey = new TimeToRestorePath(this, null, Keys.TIME_TO_RESTORE__TIME_TO_RESTORE_FAILED_DEPLOYMENT_ID_FKEY.getInverseKey());
+
+        return _timeToRestoreFailedDeploymentIdFkey;
+    }
+
+    private transient TimeToRestorePath _timeToRestoreRestoredDeploymentIdFkey;
+
+    /**
+     * Get the implicit to-many join path to the
+     * <code>public.time_to_restore</code> table, via the
+     * <code>time_to_restore_restored_deployment_id_fkey</code> key
+     */
+    public TimeToRestorePath timeToRestoreRestoredDeploymentIdFkey() {
+        if (_timeToRestoreRestoredDeploymentIdFkey == null)
+            _timeToRestoreRestoredDeploymentIdFkey = new TimeToRestorePath(this, null, Keys.TIME_TO_RESTORE__TIME_TO_RESTORE_RESTORED_DEPLOYMENT_ID_FKEY.getInverseKey());
+
+        return _timeToRestoreRestoredDeploymentIdFkey;
     }
 
     @Override

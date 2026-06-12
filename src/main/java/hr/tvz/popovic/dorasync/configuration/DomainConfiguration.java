@@ -7,6 +7,7 @@ import hr.tvz.popovic.dorasync.application.domain.service.JenkinsStepCollector;
 import hr.tvz.popovic.dorasync.application.domain.service.JobStepWorker;
 import hr.tvz.popovic.dorasync.application.domain.service.ScheduledJobEnqueuer;
 import hr.tvz.popovic.dorasync.application.domain.service.StaleJobReaper;
+import hr.tvz.popovic.dorasync.application.domain.service.TimeToRestoreCalculator;
 import hr.tvz.popovic.dorasync.application.port.out.AddJobStepPort;
 import hr.tvz.popovic.dorasync.application.port.out.DeploykoRepositoryPort;
 import hr.tvz.popovic.dorasync.application.port.out.DequeueJobStepsPort;
@@ -24,6 +25,7 @@ import hr.tvz.popovic.dorasync.application.port.out.ReapStaleJobsPort;
 import hr.tvz.popovic.dorasync.application.port.out.RescheduleServicePort;
 import hr.tvz.popovic.dorasync.application.port.out.RunJobPort;
 import hr.tvz.popovic.dorasync.application.port.out.TaskExecutorPort;
+import hr.tvz.popovic.dorasync.application.port.out.TimeToRestoreRepositoryPort;
 import hr.tvz.popovic.dorasync.application.port.out.TransactionRunnerPort;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -102,8 +104,23 @@ public class DomainConfiguration {
     }
 
     @Bean
-    ComputeMetricsStepProcessor computeMetricsStepProcessor(TransactionRunnerPort transactionRunnerPort) {
-        return new ComputeMetricsStepProcessor(transactionRunnerPort);
+    TimeToRestoreCalculator timeToRestoreCalculator() {
+        return new TimeToRestoreCalculator();
+    }
+
+    @Bean
+    ComputeMetricsStepProcessor computeMetricsStepProcessor(
+            TransactionRunnerPort transactionRunnerPort,
+            FetchConnectionPort fetchConnectionPort,
+            TimeToRestoreRepositoryPort timeToRestoreRepositoryPort,
+            TimeToRestoreCalculator timeToRestoreCalculator
+    ) {
+        return new ComputeMetricsStepProcessor(
+                transactionRunnerPort,
+                fetchConnectionPort,
+                timeToRestoreRepositoryPort,
+                timeToRestoreCalculator
+        );
     }
 
     @Bean
