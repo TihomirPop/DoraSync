@@ -7,6 +7,7 @@ package hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables;
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.Keys;
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.Public;
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.Commits.CommitsPath;
+import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.LeadTimeForChanges.LeadTimeForChangesPath;
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.ServiceConnections.ServiceConnectionsPath;
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.records.RepositoriesRecord;
 
@@ -184,6 +185,19 @@ public class Repositories extends TableImpl<RepositoriesRecord> {
             _commits = new CommitsPath(this, null, Keys.COMMITS__COMMITS_REPOSITORY_ID_FKEY.getInverseKey());
 
         return _commits;
+    }
+
+    private transient LeadTimeForChangesPath _leadTimeForChanges;
+
+    /**
+     * Get the implicit to-many join path to the
+     * <code>public.lead_time_for_changes</code> table
+     */
+    public LeadTimeForChangesPath leadTimeForChanges() {
+        if (_leadTimeForChanges == null)
+            _leadTimeForChanges = new LeadTimeForChangesPath(this, null, Keys.LEAD_TIME_FOR_CHANGES__LEAD_TIME_FOR_CHANGES_REPOSITORY_ID_FKEY.getInverseKey());
+
+        return _leadTimeForChanges;
     }
 
     @Override

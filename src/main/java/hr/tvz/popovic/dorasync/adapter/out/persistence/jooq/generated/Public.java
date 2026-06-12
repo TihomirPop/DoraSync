@@ -11,6 +11,7 @@ import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.Dep
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.Deployments;
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.JobSteps;
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.Jobs;
+import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.LeadTimeForChanges;
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.Pipelines;
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.Repositories;
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.ServiceConnections;
@@ -74,6 +75,11 @@ public class Public extends SchemaImpl {
     public final Jobs JOBS = Jobs.JOBS;
 
     /**
+     * The table <code>public.lead_time_for_changes</code>.
+     */
+    public final LeadTimeForChanges LEAD_TIME_FOR_CHANGES = LeadTimeForChanges.LEAD_TIME_FOR_CHANGES;
+
+    /**
      * The table <code>public.pipelines</code>.
      */
     public final Pipelines PIPELINES = Pipelines.PIPELINES;
@@ -121,6 +127,7 @@ public class Public extends SchemaImpl {
             Deployments.DEPLOYMENTS,
             JobSteps.JOB_STEPS,
             Jobs.JOBS,
+            LeadTimeForChanges.LEAD_TIME_FOR_CHANGES,
             Pipelines.PIPELINES,
             Repositories.REPOSITORIES,
             ServiceConnections.SERVICE_CONNECTIONS,

@@ -11,6 +11,7 @@ import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.Dep
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.Deployments;
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.JobSteps;
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.Jobs;
+import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.LeadTimeForChanges;
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.Pipelines;
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.Repositories;
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.ServiceConnections;
@@ -23,6 +24,7 @@ import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.rec
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.records.DeploymentsRecord;
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.records.JobStepsRecord;
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.records.JobsRecord;
+import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.records.LeadTimeForChangesRecord;
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.records.PipelinesRecord;
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.records.RepositoriesRecord;
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.records.ServiceConnectionsRecord;
@@ -59,6 +61,7 @@ public class Keys {
     public static final UniqueKey<DeploymentsRecord> DEPLOYMENTS_PKEY = Internal.createUniqueKey(Deployments.DEPLOYMENTS, DSL.name("deployments_pkey"), new TableField[] { Deployments.DEPLOYMENTS.ID }, true);
     public static final UniqueKey<JobStepsRecord> JOB_STEPS_PKEY = Internal.createUniqueKey(JobSteps.JOB_STEPS, DSL.name("job_steps_pkey"), new TableField[] { JobSteps.JOB_STEPS.ID }, true);
     public static final UniqueKey<JobsRecord> JOBS_PKEY = Internal.createUniqueKey(Jobs.JOBS, DSL.name("jobs_pkey"), new TableField[] { Jobs.JOBS.ID }, true);
+    public static final UniqueKey<LeadTimeForChangesRecord> LEAD_TIME_FOR_CHANGES_PKEY = Internal.createUniqueKey(LeadTimeForChanges.LEAD_TIME_FOR_CHANGES, DSL.name("lead_time_for_changes_pkey"), new TableField[] { LeadTimeForChanges.LEAD_TIME_FOR_CHANGES.COMMIT_ID }, true);
     public static final UniqueKey<PipelinesRecord> PIPELINES_PKEY = Internal.createUniqueKey(Pipelines.PIPELINES, DSL.name("pipelines_pkey"), new TableField[] { Pipelines.PIPELINES.ID }, true);
     public static final UniqueKey<PipelinesRecord> PIPELINES_SERVICE_CONNECTION_ID_KEY = Internal.createUniqueKey(Pipelines.PIPELINES, DSL.name("pipelines_service_connection_id_key"), new TableField[] { Pipelines.PIPELINES.SERVICE_CONNECTION_ID }, true);
     public static final UniqueKey<RepositoriesRecord> REPOSITORIES_PKEY = Internal.createUniqueKey(Repositories.REPOSITORIES, DSL.name("repositories_pkey"), new TableField[] { Repositories.REPOSITORIES.ID }, true);
@@ -79,6 +82,9 @@ public class Keys {
     public static final ForeignKey<DeploymentsRecord, DeploymentTargetsRecord> DEPLOYMENTS__DEPLOYMENTS_DEPLOYMENT_TARGET_ID_FKEY = Internal.createForeignKey(Deployments.DEPLOYMENTS, DSL.name("deployments_deployment_target_id_fkey"), new TableField[] { Deployments.DEPLOYMENTS.DEPLOYMENT_TARGET_ID }, Keys.DEPLOYMENT_TARGETS_PKEY, new TableField[] { DeploymentTargets.DEPLOYMENT_TARGETS.ID }, true);
     public static final ForeignKey<JobStepsRecord, JobsRecord> JOB_STEPS__JOB_STEPS_JOB_ID_FKEY = Internal.createForeignKey(JobSteps.JOB_STEPS, DSL.name("job_steps_job_id_fkey"), new TableField[] { JobSteps.JOB_STEPS.JOB_ID }, Keys.JOBS_PKEY, new TableField[] { Jobs.JOBS.ID }, true);
     public static final ForeignKey<JobsRecord, ServicesRecord> JOBS__JOBS_SERVICE_ID_FKEY = Internal.createForeignKey(Jobs.JOBS, DSL.name("jobs_service_id_fkey"), new TableField[] { Jobs.JOBS.SERVICE_ID }, Keys.SERVICES_PKEY, new TableField[] { Services.SERVICES.ID }, true);
+    public static final ForeignKey<LeadTimeForChangesRecord, CommitsRecord> LEAD_TIME_FOR_CHANGES__LEAD_TIME_FOR_CHANGES_COMMIT_ID_FKEY = Internal.createForeignKey(LeadTimeForChanges.LEAD_TIME_FOR_CHANGES, DSL.name("lead_time_for_changes_commit_id_fkey"), new TableField[] { LeadTimeForChanges.LEAD_TIME_FOR_CHANGES.COMMIT_ID }, Keys.COMMITS_PKEY, new TableField[] { Commits.COMMITS.ID }, true);
+    public static final ForeignKey<LeadTimeForChangesRecord, DeploymentsRecord> LEAD_TIME_FOR_CHANGES__LEAD_TIME_FOR_CHANGES_DEPLOYMENT_ID_FKEY = Internal.createForeignKey(LeadTimeForChanges.LEAD_TIME_FOR_CHANGES, DSL.name("lead_time_for_changes_deployment_id_fkey"), new TableField[] { LeadTimeForChanges.LEAD_TIME_FOR_CHANGES.DEPLOYMENT_ID }, Keys.DEPLOYMENTS_PKEY, new TableField[] { Deployments.DEPLOYMENTS.ID }, true);
+    public static final ForeignKey<LeadTimeForChangesRecord, RepositoriesRecord> LEAD_TIME_FOR_CHANGES__LEAD_TIME_FOR_CHANGES_REPOSITORY_ID_FKEY = Internal.createForeignKey(LeadTimeForChanges.LEAD_TIME_FOR_CHANGES, DSL.name("lead_time_for_changes_repository_id_fkey"), new TableField[] { LeadTimeForChanges.LEAD_TIME_FOR_CHANGES.REPOSITORY_ID }, Keys.REPOSITORIES_PKEY, new TableField[] { Repositories.REPOSITORIES.ID }, true);
     public static final ForeignKey<PipelinesRecord, ServiceConnectionsRecord> PIPELINES__PIPELINES_SERVICE_CONNECTION_ID_FKEY = Internal.createForeignKey(Pipelines.PIPELINES, DSL.name("pipelines_service_connection_id_fkey"), new TableField[] { Pipelines.PIPELINES.SERVICE_CONNECTION_ID }, Keys.SERVICE_CONNECTIONS_PKEY, new TableField[] { ServiceConnections.SERVICE_CONNECTIONS.ID }, true);
     public static final ForeignKey<RepositoriesRecord, ServiceConnectionsRecord> REPOSITORIES__REPOSITORIES_SERVICE_CONNECTION_ID_FKEY = Internal.createForeignKey(Repositories.REPOSITORIES, DSL.name("repositories_service_connection_id_fkey"), new TableField[] { Repositories.REPOSITORIES.SERVICE_CONNECTION_ID }, Keys.SERVICE_CONNECTIONS_PKEY, new TableField[] { ServiceConnections.SERVICE_CONNECTIONS.ID }, true);
     public static final ForeignKey<ServiceConnectionsRecord, ServicesRecord> SERVICE_CONNECTIONS__SERVICE_CONNECTIONS_SERVICE_ID_FKEY = Internal.createForeignKey(ServiceConnections.SERVICE_CONNECTIONS, DSL.name("service_connections_service_id_fkey"), new TableField[] { ServiceConnections.SERVICE_CONNECTIONS.SERVICE_ID }, Keys.SERVICES_PKEY, new TableField[] { Services.SERVICES.ID }, true);

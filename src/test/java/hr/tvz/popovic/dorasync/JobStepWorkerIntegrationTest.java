@@ -45,6 +45,7 @@ import static hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tab
 import static hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.Pipelines.PIPELINES;
 import static hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.Repositories.REPOSITORIES;
 import static hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.Jobs.JOBS;
+import static hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.LeadTimeForChanges.LEAD_TIME_FOR_CHANGES;
 import static hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.ServiceConnections.SERVICE_CONNECTIONS;
 import static hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.Services.SERVICES;
 import static hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.TimeToRestore.TIME_TO_RESTORE;
@@ -112,6 +113,7 @@ class JobStepWorkerIntegrationTest {
 
     @BeforeEach
     void cleanUp() {
+        dsl.deleteFrom(LEAD_TIME_FOR_CHANGES).execute();
         dsl.deleteFrom(COMMITS).execute();
         dsl.deleteFrom(REPOSITORIES).execute();
         dsl.deleteFrom(BUILD_STAGES).execute();

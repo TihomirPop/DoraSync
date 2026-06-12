@@ -8,6 +8,7 @@ import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.Indexes;
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.Keys;
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.Public;
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.DeploymentTargets.DeploymentTargetsPath;
+import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.LeadTimeForChanges.LeadTimeForChangesPath;
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.TimeToRestore.TimeToRestorePath;
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.records.DeploymentsRecord;
 
@@ -194,6 +195,19 @@ public class Deployments extends TableImpl<DeploymentsRecord> {
             _deploymentTargets = new DeploymentTargetsPath(this, Keys.DEPLOYMENTS__DEPLOYMENTS_DEPLOYMENT_TARGET_ID_FKEY, null);
 
         return _deploymentTargets;
+    }
+
+    private transient LeadTimeForChangesPath _leadTimeForChanges;
+
+    /**
+     * Get the implicit to-many join path to the
+     * <code>public.lead_time_for_changes</code> table
+     */
+    public LeadTimeForChangesPath leadTimeForChanges() {
+        if (_leadTimeForChanges == null)
+            _leadTimeForChanges = new LeadTimeForChangesPath(this, null, Keys.LEAD_TIME_FOR_CHANGES__LEAD_TIME_FOR_CHANGES_DEPLOYMENT_ID_FKEY.getInverseKey());
+
+        return _leadTimeForChanges;
     }
 
     private transient TimeToRestorePath _timeToRestoreFailedDeploymentIdFkey;

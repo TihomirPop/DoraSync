@@ -11,6 +11,7 @@ import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.Dep
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.Deployments;
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.JobSteps;
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.Jobs;
+import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.LeadTimeForChanges;
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.Pipelines;
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.Repositories;
 import hr.tvz.popovic.dorasync.adapter.out.persistence.jooq.generated.tables.ServiceConnections;
@@ -58,6 +59,11 @@ public class Tables {
      * The table <code>public.jobs</code>.
      */
     public static final Jobs JOBS = Jobs.JOBS;
+
+    /**
+     * The table <code>public.lead_time_for_changes</code>.
+     */
+    public static final LeadTimeForChanges LEAD_TIME_FOR_CHANGES = LeadTimeForChanges.LEAD_TIME_FOR_CHANGES;
 
     /**
      * The table <code>public.pipelines</code>.

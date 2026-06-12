@@ -5,6 +5,7 @@ import hr.tvz.popovic.dorasync.application.domain.service.DeploykoStepCollector;
 import hr.tvz.popovic.dorasync.application.domain.service.GithubStepCollector;
 import hr.tvz.popovic.dorasync.application.domain.service.JenkinsStepCollector;
 import hr.tvz.popovic.dorasync.application.domain.service.JobStepWorker;
+import hr.tvz.popovic.dorasync.application.domain.service.LeadTimeCalculator;
 import hr.tvz.popovic.dorasync.application.domain.service.ScheduledJobEnqueuer;
 import hr.tvz.popovic.dorasync.application.domain.service.StaleJobReaper;
 import hr.tvz.popovic.dorasync.application.domain.service.TimeToRestoreCalculator;
@@ -17,6 +18,7 @@ import hr.tvz.popovic.dorasync.application.port.out.FetchGithubHistoryPort;
 import hr.tvz.popovic.dorasync.application.port.out.FetchJenkinsBuildsPort;
 import hr.tvz.popovic.dorasync.application.port.out.GithubRepositoryPort;
 import hr.tvz.popovic.dorasync.application.port.out.JenkinsRepositoryPort;
+import hr.tvz.popovic.dorasync.application.port.out.LeadTimeRepositoryPort;
 import hr.tvz.popovic.dorasync.application.port.out.FetchScheduledServicesPort;
 import hr.tvz.popovic.dorasync.application.port.out.FetchServiceConnectionsPort;
 import hr.tvz.popovic.dorasync.application.port.out.FinishJobPort;
@@ -109,17 +111,26 @@ public class DomainConfiguration {
     }
 
     @Bean
+    LeadTimeCalculator leadTimeCalculator() {
+        return new LeadTimeCalculator();
+    }
+
+    @Bean
     ComputeMetricsStepProcessor computeMetricsStepProcessor(
             TransactionRunnerPort transactionRunnerPort,
             FetchConnectionPort fetchConnectionPort,
             TimeToRestoreRepositoryPort timeToRestoreRepositoryPort,
-            TimeToRestoreCalculator timeToRestoreCalculator
+            TimeToRestoreCalculator timeToRestoreCalculator,
+            LeadTimeRepositoryPort leadTimeRepositoryPort,
+            LeadTimeCalculator leadTimeCalculator
     ) {
         return new ComputeMetricsStepProcessor(
                 transactionRunnerPort,
                 fetchConnectionPort,
                 timeToRestoreRepositoryPort,
-                timeToRestoreCalculator
+                timeToRestoreCalculator,
+                leadTimeRepositoryPort,
+                leadTimeCalculator
         );
     }
 
