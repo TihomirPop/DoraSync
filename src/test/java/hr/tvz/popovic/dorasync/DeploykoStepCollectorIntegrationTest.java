@@ -130,7 +130,6 @@ class DeploykoStepCollectorIntegrationTest {
         assertEquals(new DeploymentCursor.Beginning(), fakeDeploykoDeployments.capturedCursor, "first run has no cursor and backfills everything");
 
         var target = dsl.selectFrom(DEPLOYMENT_TARGETS).fetchOne();
-        assertEquals("deployko-api", target.getDeploykoService());
 
         assertEquals(2, dsl.fetchCount(DEPLOYMENTS), "in-progress deployment skipped");
 

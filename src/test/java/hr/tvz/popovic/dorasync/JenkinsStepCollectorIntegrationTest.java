@@ -133,7 +133,6 @@ class JenkinsStepCollectorIntegrationTest {
         assertEquals(new BuildCursor.Beginning(), fakeJenkinsBuilds.capturedCursor, "first run has no cursor and backfills everything");
 
         var pipeline = dsl.selectFrom(PIPELINES).fetchOne();
-        assertEquals("DoraSync", pipeline.getFullName());
 
         assertEquals(3, dsl.fetchCount(BUILDS));
         var second = dsl.selectFrom(BUILDS).where(BUILDS.BUILD_NUMBER.eq(2L)).fetchOne();

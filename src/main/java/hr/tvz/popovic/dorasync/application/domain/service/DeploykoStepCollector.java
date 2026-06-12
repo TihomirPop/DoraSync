@@ -55,7 +55,7 @@ public final class DeploykoStepCollector implements StepProcessor<JobStep.Collec
 
         return switch (fetchDeploykoDeploymentsPort.fetch(service, cursor)) {
             case FetchDeploykoDeploymentsPort.Result.Success(var deployments) ->
-                    persist(connectionId, service, terminalOnly(deployments));
+                    persist(connectionId, terminalOnly(deployments));
             case FetchDeploykoDeploymentsPort.Result.Failure(var cause) -> new StepResult.Failure(cause);
         };
     }
@@ -66,9 +66,9 @@ public final class DeploykoStepCollector implements StepProcessor<JobStep.Collec
                 .toList();
     }
 
-    private StepResult persist(Id connectionId, DeploykoService service, List<Deployment> deployments) {
+    private StepResult persist(Id connectionId, List<Deployment> deployments) {
         var transactionResult = transactionRunner.inTransaction(transaction -> {
-            StepResult result = switch (deploykoRepositoryPort.upsertTarget(connectionId, service)) {
+            StepResult result = switch (deploykoRepositoryPort.upsertTarget(connectionId)) {
                 case DeploykoRepositoryPort.UpsertTargetResult.Success(var deploymentTargetId) ->
                         switch (deploykoRepositoryPort.saveDeployments(deploymentTargetId, deployments)) {
                             case DeploykoRepositoryPort.SaveDeploymentsResult.Success(var savedCount) -> new StepResult.Success();

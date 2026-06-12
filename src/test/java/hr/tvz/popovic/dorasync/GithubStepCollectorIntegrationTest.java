@@ -125,7 +125,6 @@ class GithubStepCollectorIntegrationTest {
         assertEquals(new CommitCursor.Beginning(), fakeGithubHistory.capturedCursor, "first run has no cursor and backfills everything");
 
         var repository = dsl.selectFrom(REPOSITORIES).fetchOne();
-        assertEquals("octo/repo", repository.getFullName());
         assertEquals("main", repository.getDefaultBranch());
 
         assertEquals(3, dsl.fetchCount(COMMITS));

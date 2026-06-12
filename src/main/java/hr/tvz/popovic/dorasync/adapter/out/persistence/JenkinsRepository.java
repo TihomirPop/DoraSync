@@ -3,7 +3,6 @@ package hr.tvz.popovic.dorasync.adapter.out.persistence;
 import hr.tvz.popovic.dorasync.application.domain.model.Build;
 import hr.tvz.popovic.dorasync.application.domain.model.BuildCursor;
 import hr.tvz.popovic.dorasync.application.domain.model.Id;
-import hr.tvz.popovic.dorasync.application.domain.model.JobPath;
 import hr.tvz.popovic.dorasync.application.domain.model.Maybe;
 import hr.tvz.popovic.dorasync.application.domain.model.Sha;
 import hr.tvz.popovic.dorasync.application.domain.model.Stage;
@@ -53,14 +52,16 @@ public class JenkinsRepository implements JenkinsRepositoryPort {
     }
 
     @Override
-    public UpsertPipelineResult upsertPipeline(Id serviceConnectionId, JobPath jobPath) {
+    public UpsertPipelineResult upsertPipeline(Id serviceConnectionId) {
         try {
+            // Find-or-create: the no-op self-update lets RETURNING fire on the existing row too,
+            // since service_connection_id is now the only column on the table.
             var record = dsl.insertInto(PIPELINES)
-                    .columns(PIPELINES.SERVICE_CONNECTION_ID, PIPELINES.FULL_NAME)
-                    .values(serviceConnectionId.value(), jobPath.value())
+                    .columns(PIPELINES.SERVICE_CONNECTION_ID)
+                    .values(serviceConnectionId.value())
                     .onConflict(PIPELINES.SERVICE_CONNECTION_ID)
                     .doUpdate()
-                    .set(PIPELINES.FULL_NAME, jobPath.value())
+                    .set(PIPELINES.SERVICE_CONNECTION_ID, serviceConnectionId.value())
                     .returning(PIPELINES.ID)
                     .fetchOne();
 

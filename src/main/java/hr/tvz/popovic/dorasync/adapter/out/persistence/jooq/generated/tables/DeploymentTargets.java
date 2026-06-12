@@ -69,11 +69,6 @@ public class DeploymentTargets extends TableImpl<DeploymentTargetsRecord> {
      */
     public final TableField<DeploymentTargetsRecord, UUID> SERVICE_CONNECTION_ID = createField(DSL.name("service_connection_id"), SQLDataType.UUID.nullable(false), this, "");
 
-    /**
-     * The column <code>public.deployment_targets.deployko_service</code>.
-     */
-    public final TableField<DeploymentTargetsRecord, String> DEPLOYKO_SERVICE = createField(DSL.name("deployko_service"), SQLDataType.CLOB.nullable(false), this, "");
-
     private DeploymentTargets(Name alias, Table<DeploymentTargetsRecord> aliased) {
         this(alias, aliased, (Field<?>[]) null, null);
     }

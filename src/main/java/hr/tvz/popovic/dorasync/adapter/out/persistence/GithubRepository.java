@@ -2,7 +2,6 @@ package hr.tvz.popovic.dorasync.adapter.out.persistence;
 
 import hr.tvz.popovic.dorasync.application.domain.model.Commit;
 import hr.tvz.popovic.dorasync.application.domain.model.CommitCursor;
-import hr.tvz.popovic.dorasync.application.domain.model.FullName;
 import hr.tvz.popovic.dorasync.application.domain.model.GitIdentity;
 import hr.tvz.popovic.dorasync.application.domain.model.Id;
 import hr.tvz.popovic.dorasync.application.domain.model.Maybe;
@@ -51,14 +50,13 @@ public class GithubRepository implements GithubRepositoryPort {
     }
 
     @Override
-    public UpsertRepositoryResult upsertRepository(Id serviceConnectionId, FullName fullName, String defaultBranch) {
+    public UpsertRepositoryResult upsertRepository(Id serviceConnectionId, String defaultBranch) {
         try {
             var record = dsl.insertInto(REPOSITORIES)
-                    .columns(REPOSITORIES.SERVICE_CONNECTION_ID, REPOSITORIES.FULL_NAME, REPOSITORIES.DEFAULT_BRANCH)
-                    .values(serviceConnectionId.value(), fullName.value(), defaultBranch)
+                    .columns(REPOSITORIES.SERVICE_CONNECTION_ID, REPOSITORIES.DEFAULT_BRANCH)
+                    .values(serviceConnectionId.value(), defaultBranch)
                     .onConflict(REPOSITORIES.SERVICE_CONNECTION_ID)
                     .doUpdate()
-                    .set(REPOSITORIES.FULL_NAME, fullName.value())
                     .set(REPOSITORIES.DEFAULT_BRANCH, defaultBranch)
                     .returning(REPOSITORIES.ID)
                     .fetchOne();

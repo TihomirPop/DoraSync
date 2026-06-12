@@ -2,7 +2,6 @@ package hr.tvz.popovic.dorasync.adapter.out.persistence;
 
 import hr.tvz.popovic.dorasync.application.domain.model.Deployment;
 import hr.tvz.popovic.dorasync.application.domain.model.DeploymentCursor;
-import hr.tvz.popovic.dorasync.application.domain.model.DeploykoService;
 import hr.tvz.popovic.dorasync.application.domain.model.Id;
 import hr.tvz.popovic.dorasync.application.domain.model.Maybe;
 import hr.tvz.popovic.dorasync.application.domain.model.Sha;
@@ -51,14 +50,16 @@ public class DeploykoRepository implements DeploykoRepositoryPort {
     }
 
     @Override
-    public UpsertTargetResult upsertTarget(Id serviceConnectionId, DeploykoService service) {
+    public UpsertTargetResult upsertTarget(Id serviceConnectionId) {
         try {
+            // Find-or-create: the no-op self-update lets RETURNING fire on the existing row too,
+            // since service_connection_id is now the only column on the table.
             var record = dsl.insertInto(DEPLOYMENT_TARGETS)
-                    .columns(DEPLOYMENT_TARGETS.SERVICE_CONNECTION_ID, DEPLOYMENT_TARGETS.DEPLOYKO_SERVICE)
-                    .values(serviceConnectionId.value(), service.value())
+                    .columns(DEPLOYMENT_TARGETS.SERVICE_CONNECTION_ID)
+                    .values(serviceConnectionId.value())
                     .onConflict(DEPLOYMENT_TARGETS.SERVICE_CONNECTION_ID)
                     .doUpdate()
-                    .set(DEPLOYMENT_TARGETS.DEPLOYKO_SERVICE, service.value())
+                    .set(DEPLOYMENT_TARGETS.SERVICE_CONNECTION_ID, serviceConnectionId.value())
                     .returning(DEPLOYMENT_TARGETS.ID)
                     .fetchOne();
 

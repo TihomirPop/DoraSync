@@ -2,7 +2,6 @@ package hr.tvz.popovic.dorasync.application.port.out;
 
 import hr.tvz.popovic.dorasync.application.domain.model.Deployment;
 import hr.tvz.popovic.dorasync.application.domain.model.DeploymentCursor;
-import hr.tvz.popovic.dorasync.application.domain.model.DeploykoService;
 import hr.tvz.popovic.dorasync.application.domain.model.Id;
 
 import java.util.List;
@@ -11,7 +10,7 @@ public interface DeploykoRepositoryPort {
 
     FindCursorResult findLatestRecordedAt(Id serviceConnectionId);
 
-    UpsertTargetResult upsertTarget(Id serviceConnectionId, DeploykoService service);
+    UpsertTargetResult upsertTarget(Id serviceConnectionId);
 
     SaveDeploymentsResult saveDeployments(Id deploymentTargetId, List<Deployment> deployments);
 

@@ -49,31 +49,17 @@ public class RepositoriesRecord extends UpdatableRecordImpl<RepositoriesRecord> 
     }
 
     /**
-     * Setter for <code>public.repositories.full_name</code>.
-     */
-    public void setFullName(String value) {
-        set(2, value);
-    }
-
-    /**
-     * Getter for <code>public.repositories.full_name</code>.
-     */
-    public String getFullName() {
-        return (String) get(2);
-    }
-
-    /**
      * Setter for <code>public.repositories.default_branch</code>.
      */
     public void setDefaultBranch(String value) {
-        set(3, value);
+        set(2, value);
     }
 
     /**
      * Getter for <code>public.repositories.default_branch</code>.
      */
     public String getDefaultBranch() {
-        return (String) get(3);
+        return (String) get(2);
     }
 
     // -------------------------------------------------------------------------
@@ -99,12 +85,11 @@ public class RepositoriesRecord extends UpdatableRecordImpl<RepositoriesRecord> 
     /**
      * Create a detached, initialised RepositoriesRecord
      */
-    public RepositoriesRecord(UUID id, UUID serviceConnectionId, String fullName, String defaultBranch) {
+    public RepositoriesRecord(UUID id, UUID serviceConnectionId, String defaultBranch) {
         super(Repositories.REPOSITORIES);
 
         setId(id);
         setServiceConnectionId(serviceConnectionId);
-        setFullName(fullName);
         setDefaultBranch(defaultBranch);
         resetChangedOnNotNull();
     }

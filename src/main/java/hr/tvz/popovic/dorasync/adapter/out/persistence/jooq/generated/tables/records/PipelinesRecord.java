@@ -48,20 +48,6 @@ public class PipelinesRecord extends UpdatableRecordImpl<PipelinesRecord> {
         return (UUID) get(1);
     }
 
-    /**
-     * Setter for <code>public.pipelines.full_name</code>.
-     */
-    public void setFullName(String value) {
-        set(2, value);
-    }
-
-    /**
-     * Getter for <code>public.pipelines.full_name</code>.
-     */
-    public String getFullName() {
-        return (String) get(2);
-    }
-
     // -------------------------------------------------------------------------
     // Primary key information
     // -------------------------------------------------------------------------
@@ -85,12 +71,11 @@ public class PipelinesRecord extends UpdatableRecordImpl<PipelinesRecord> {
     /**
      * Create a detached, initialised PipelinesRecord
      */
-    public PipelinesRecord(UUID id, UUID serviceConnectionId, String fullName) {
+    public PipelinesRecord(UUID id, UUID serviceConnectionId) {
         super(Pipelines.PIPELINES);
 
         setId(id);
         setServiceConnectionId(serviceConnectionId);
-        setFullName(fullName);
         resetChangedOnNotNull();
     }
 }

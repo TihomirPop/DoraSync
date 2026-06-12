@@ -3,7 +3,6 @@ package hr.tvz.popovic.dorasync.application.port.out;
 import hr.tvz.popovic.dorasync.application.domain.model.Build;
 import hr.tvz.popovic.dorasync.application.domain.model.BuildCursor;
 import hr.tvz.popovic.dorasync.application.domain.model.Id;
-import hr.tvz.popovic.dorasync.application.domain.model.JobPath;
 
 import java.util.List;
 
@@ -11,7 +10,7 @@ public interface JenkinsRepositoryPort {
 
     FindCursorResult findLatestBuildNumber(Id serviceConnectionId);
 
-    UpsertPipelineResult upsertPipeline(Id serviceConnectionId, JobPath jobPath);
+    UpsertPipelineResult upsertPipeline(Id serviceConnectionId);
 
     SaveBuildsResult saveBuilds(Id pipelineId, List<Build> builds);
 

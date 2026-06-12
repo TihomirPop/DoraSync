@@ -55,14 +55,14 @@ public final class GithubStepCollector implements StepProcessor<JobStep.CollectG
 
         return switch (fetchGithubHistoryPort.fetch(fullName, cursor)) {
             case FetchGithubHistoryPort.Result.Success(var defaultBranch, var commits) ->
-                    persist(connectionId, fullName, defaultBranch, commits);
+                    persist(connectionId, defaultBranch, commits);
             case FetchGithubHistoryPort.Result.Failure(var cause) -> new StepResult.Failure(cause);
         };
     }
 
-    private StepResult persist(Id connectionId, FullName fullName, String defaultBranch, List<Commit> commits) {
+    private StepResult persist(Id connectionId, String defaultBranch, List<Commit> commits) {
         var transactionResult = transactionRunner.inTransaction(transaction -> {
-            StepResult result = switch (githubRepositoryPort.upsertRepository(connectionId, fullName, defaultBranch)) {
+            StepResult result = switch (githubRepositoryPort.upsertRepository(connectionId, defaultBranch)) {
                 case GithubRepositoryPort.UpsertRepositoryResult.Success(var repositoryId) ->
                         switch (githubRepositoryPort.saveCommits(repositoryId, commits)) {
                             case GithubRepositoryPort.SaveCommitsResult.Success(var savedCount) -> new StepResult.Success();

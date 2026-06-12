@@ -238,8 +238,8 @@ class ComputeMetricsStepProcessorIntegrationTest {
                 .getId();
 
         return new Id(dsl.insertInto(DEPLOYMENT_TARGETS)
-                .columns(DEPLOYMENT_TARGETS.SERVICE_CONNECTION_ID, DEPLOYMENT_TARGETS.DEPLOYKO_SERVICE)
-                .values(connectionId, "deployko-api")
+                .columns(DEPLOYMENT_TARGETS.SERVICE_CONNECTION_ID)
+                .values(connectionId)
                 .returning(DEPLOYMENT_TARGETS.ID)
                 .fetchOne()
                 .getId());
@@ -281,8 +281,8 @@ class ComputeMetricsStepProcessorIntegrationTest {
     private Id insertRepository(Id serviceId) {
         var connectionId = insertConnection(serviceId, ServiceConnectionType.GITHUB, "owner/repo");
         return new Id(dsl.insertInto(REPOSITORIES)
-                .columns(REPOSITORIES.SERVICE_CONNECTION_ID, REPOSITORIES.FULL_NAME)
-                .values(connectionId, "owner/repo")
+                .columns(REPOSITORIES.SERVICE_CONNECTION_ID)
+                .values(connectionId)
                 .returning(REPOSITORIES.ID)
                 .fetchOne()
                 .getId());
@@ -291,8 +291,8 @@ class ComputeMetricsStepProcessorIntegrationTest {
     private Id insertPipeline(Id serviceId) {
         var connectionId = insertConnection(serviceId, ServiceConnectionType.JENKINS, "owner/pipeline");
         return new Id(dsl.insertInto(PIPELINES)
-                .columns(PIPELINES.SERVICE_CONNECTION_ID, PIPELINES.FULL_NAME)
-                .values(connectionId, "owner/pipeline")
+                .columns(PIPELINES.SERVICE_CONNECTION_ID)
+                .values(connectionId)
                 .returning(PIPELINES.ID)
                 .fetchOne()
                 .getId());

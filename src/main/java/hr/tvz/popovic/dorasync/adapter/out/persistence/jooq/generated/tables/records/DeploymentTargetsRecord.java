@@ -48,20 +48,6 @@ public class DeploymentTargetsRecord extends UpdatableRecordImpl<DeploymentTarge
         return (UUID) get(1);
     }
 
-    /**
-     * Setter for <code>public.deployment_targets.deployko_service</code>.
-     */
-    public void setDeploykoService(String value) {
-        set(2, value);
-    }
-
-    /**
-     * Getter for <code>public.deployment_targets.deployko_service</code>.
-     */
-    public String getDeploykoService() {
-        return (String) get(2);
-    }
-
     // -------------------------------------------------------------------------
     // Primary key information
     // -------------------------------------------------------------------------
@@ -85,12 +71,11 @@ public class DeploymentTargetsRecord extends UpdatableRecordImpl<DeploymentTarge
     /**
      * Create a detached, initialised DeploymentTargetsRecord
      */
-    public DeploymentTargetsRecord(UUID id, UUID serviceConnectionId, String deploykoService) {
+    public DeploymentTargetsRecord(UUID id, UUID serviceConnectionId) {
         super(DeploymentTargets.DEPLOYMENT_TARGETS);
 
         setId(id);
         setServiceConnectionId(serviceConnectionId);
-        setDeploykoService(deploykoService);
         resetChangedOnNotNull();
     }
 }

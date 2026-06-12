@@ -68,11 +68,6 @@ public class Pipelines extends TableImpl<PipelinesRecord> {
      */
     public final TableField<PipelinesRecord, UUID> SERVICE_CONNECTION_ID = createField(DSL.name("service_connection_id"), SQLDataType.UUID.nullable(false), this, "");
 
-    /**
-     * The column <code>public.pipelines.full_name</code>.
-     */
-    public final TableField<PipelinesRecord, String> FULL_NAME = createField(DSL.name("full_name"), SQLDataType.CLOB.nullable(false), this, "");
-
     private Pipelines(Name alias, Table<PipelinesRecord> aliased) {
         this(alias, aliased, (Field<?>[]) null, null);
     }

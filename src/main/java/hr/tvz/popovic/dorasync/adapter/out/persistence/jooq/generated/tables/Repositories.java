@@ -70,11 +70,6 @@ public class Repositories extends TableImpl<RepositoriesRecord> {
     public final TableField<RepositoriesRecord, UUID> SERVICE_CONNECTION_ID = createField(DSL.name("service_connection_id"), SQLDataType.UUID.nullable(false), this, "");
 
     /**
-     * The column <code>public.repositories.full_name</code>.
-     */
-    public final TableField<RepositoriesRecord, String> FULL_NAME = createField(DSL.name("full_name"), SQLDataType.CLOB.nullable(false), this, "");
-
-    /**
      * The column <code>public.repositories.default_branch</code>.
      */
     public final TableField<RepositoriesRecord, String> DEFAULT_BRANCH = createField(DSL.name("default_branch"), SQLDataType.CLOB, this, "");

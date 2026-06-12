@@ -54,14 +54,14 @@ public final class JenkinsStepCollector implements StepProcessor<JobStep.Collect
         }
 
         return switch (fetchJenkinsBuildsPort.fetch(jobPath, cursor)) {
-            case FetchJenkinsBuildsPort.Result.Success(var builds) -> persist(connectionId, jobPath, builds);
+            case FetchJenkinsBuildsPort.Result.Success(var builds) -> persist(connectionId, builds);
             case FetchJenkinsBuildsPort.Result.Failure(var cause) -> new StepResult.Failure(cause);
         };
     }
 
-    private StepResult persist(Id connectionId, JobPath jobPath, List<Build> builds) {
+    private StepResult persist(Id connectionId, List<Build> builds) {
         var transactionResult = transactionRunner.inTransaction(transaction -> {
-            StepResult result = switch (jenkinsRepositoryPort.upsertPipeline(connectionId, jobPath)) {
+            StepResult result = switch (jenkinsRepositoryPort.upsertPipeline(connectionId)) {
                 case JenkinsRepositoryPort.UpsertPipelineResult.Success(var pipelineId) ->
                         switch (jenkinsRepositoryPort.saveBuilds(pipelineId, builds)) {
                             case JenkinsRepositoryPort.SaveBuildsResult.Success(var savedCount) -> new StepResult.Success();
