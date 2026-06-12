@@ -7,6 +7,8 @@ public interface AddJobStepPort {
 
     Result addStep(Id jobId, ConnectionType connectionType);
 
+    Result addComputeMetricsStep(Id jobId);
+
     sealed interface Result {
 
         record Success(Id jobStepId) implements Result {

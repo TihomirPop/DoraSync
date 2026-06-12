@@ -150,7 +150,7 @@ public class JobSteps extends TableImpl<JobStepsRecord> {
 
     @Override
     public List<Index> getIndexes() {
-        return Arrays.asList(Indexes.IX_JOB_STEPS_JOB_ID, Indexes.IX_JOB_STEPS_PENDING, Indexes.UX_JOB_STEPS_ONE_RUNNING_PER_JOB_AND_TYPE);
+        return Arrays.asList(Indexes.IX_JOB_STEPS_JOB_ID, Indexes.IX_JOB_STEPS_PENDING, Indexes.UX_JOB_STEPS_ONE_COMPUTE_METRICS_PER_JOB, Indexes.UX_JOB_STEPS_ONE_RUNNING_PER_JOB_AND_TYPE);
     }
 
     @Override

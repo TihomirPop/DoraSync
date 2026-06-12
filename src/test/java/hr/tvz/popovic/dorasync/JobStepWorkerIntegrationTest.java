@@ -125,19 +125,92 @@ class JobStepWorkerIntegrationTest {
     }
 
     @Test
-    void processesAllStepsAndFinishesJob() {
+    void collectStepsSucceedingLeavesComputeMetricsStepPendingAndJobRunning() {
         var serviceId = insertService();
         var jobId = insertJob(serviceId, JobStatus.RUNNING);
         insertConnection(serviceId, ServiceConnectionType.GITHUB, "org/repo-a");
         insertConnection(serviceId, ServiceConnectionType.JENKINS, "job-x");
         insertStep(jobId, JobStepType.COLLECT_GITHUB, JobStepStatus.PENDING);
         insertStep(jobId, JobStepType.COLLECT_JENKINS, JobStepStatus.PENDING);
+        insertStep(jobId, JobStepType.COMPUTE_METRICS, JobStepStatus.PENDING);
+
+        var result = workJobStepsUseCase.work();
+
+        // Only the two collect steps are claimed; the compute-metrics step stays gated.
+        assertEquals(new WorkJobStepsUseCase.Result.Success(2), result);
+        assertEquals(2, countSteps(jobId, JobStepStatus.SUCCESS));
+        assertEquals(1, countStepsOfType(jobId, JobStepType.COMPUTE_METRICS, JobStepStatus.PENDING));
+        assertEquals(JobStatus.RUNNING, jobStatus(jobId));
+    }
+
+    @Test
+    void computeMetricsStepFinishesJobOnSecondTick() {
+        var serviceId = insertService();
+        var jobId = insertJob(serviceId, JobStatus.RUNNING);
+        insertConnection(serviceId, ServiceConnectionType.GITHUB, "org/repo-a");
+        insertConnection(serviceId, ServiceConnectionType.JENKINS, "job-x");
+        insertStep(jobId, JobStepType.COLLECT_GITHUB, JobStepStatus.PENDING);
+        insertStep(jobId, JobStepType.COLLECT_JENKINS, JobStepStatus.PENDING);
+        insertStep(jobId, JobStepType.COMPUTE_METRICS, JobStepStatus.PENDING);
+
+        // First tick: runs the two collect steps; the compute-metrics step is still gated.
+        workJobStepsUseCase.work();
+        assertEquals(JobStatus.RUNNING, jobStatus(jobId));
+
+        // Second tick: the gate is now open, so the compute-metrics step runs and finishes the job.
+        var secondResult = workJobStepsUseCase.work();
+
+        assertEquals(new WorkJobStepsUseCase.Result.Success(1), secondResult);
+        assertEquals(3, countSteps(jobId, JobStepStatus.SUCCESS));
+        assertEquals(1, countStepsOfType(jobId, JobStepType.COMPUTE_METRICS, JobStepStatus.SUCCESS));
+        assertEquals(JobStatus.SUCCESS, jobStatus(jobId));
+    }
+
+    @Test
+    void failingCollectStepFailsJobAndItsRemainingSteps() {
+        var serviceId = insertService();
+        var jobId = insertJob(serviceId, JobStatus.RUNNING);
+        insertConnection(serviceId, ServiceConnectionType.GITHUB, "org/repo-a");
+        // No JENKINS connection: that step fails during collection.
+        insertStep(jobId, JobStepType.COLLECT_GITHUB, JobStepStatus.PENDING);
+        insertStep(jobId, JobStepType.COLLECT_JENKINS, JobStepStatus.PENDING);
+        insertStep(jobId, JobStepType.COMPUTE_METRICS, JobStepStatus.PENDING);
 
         var result = workJobStepsUseCase.work();
 
         assertEquals(new WorkJobStepsUseCase.Result.Success(2), result);
-        assertEquals(2, countSteps(jobId, JobStepStatus.SUCCESS));
-        assertEquals(JobStatus.SUCCESS, jobStatus(jobId));
+        assertEquals(JobStatus.FAILURE, jobStatus(jobId));
+        // Failing the job also fails its remaining non-terminal steps, so nothing is left dangling.
+        assertEquals(0, countSteps(jobId, JobStepStatus.PENDING));
+        assertEquals(0, countSteps(jobId, JobStepStatus.RUNNING));
+        assertEquals(1, countStepsOfType(jobId, JobStepType.COMPUTE_METRICS, JobStepStatus.FAILURE));
+    }
+
+    @Test
+    void dequeueSkipsComputeMetricsStepWhileCollectStepsAreOutstanding() {
+        var jobId = insertJob(insertService(), JobStatus.RUNNING);
+        insertStep(jobId, JobStepType.COLLECT_GITHUB, JobStepStatus.RUNNING);
+        var computeStepId = insertStep(jobId, JobStepType.COMPUTE_METRICS, JobStepStatus.PENDING);
+
+        var result = dequeueJobStepsPort.dequeue(10);
+
+        var success = assertInstanceOf(DequeueJobStepsPort.Result.Success.class, result);
+        assertEquals(0, success.jobSteps().size());
+        assertEquals(JobStepStatus.PENDING, stepStatus(computeStepId));
+    }
+
+    @Test
+    void dequeueClaimsComputeMetricsStepOnceAllCollectStepsSucceeded() {
+        var jobId = insertJob(insertService(), JobStatus.RUNNING);
+        insertStep(jobId, JobStepType.COLLECT_GITHUB, JobStepStatus.SUCCESS);
+        var computeStepId = insertStep(jobId, JobStepType.COMPUTE_METRICS, JobStepStatus.PENDING);
+
+        var result = dequeueJobStepsPort.dequeue(10);
+
+        var success = assertInstanceOf(DequeueJobStepsPort.Result.Success.class, result);
+        assertEquals(1, success.jobSteps().size());
+        assertInstanceOf(JobStep.ComputeMetricsStep.class, success.jobSteps().getFirst());
+        assertEquals(JobStepStatus.RUNNING, stepStatus(computeStepId));
     }
 
     @Test
@@ -269,5 +342,11 @@ class JobStepWorkerIntegrationTest {
 
     private int countSteps(Id jobId, JobStepStatus status) {
         return dsl.fetchCount(JOB_STEPS, JOB_STEPS.JOB_ID.eq(jobId.value()).and(JOB_STEPS.STATUS.eq(status)));
+    }
+
+    private int countStepsOfType(Id jobId, JobStepType type, JobStepStatus status) {
+        return dsl.fetchCount(JOB_STEPS, JOB_STEPS.JOB_ID.eq(jobId.value())
+                .and(JOB_STEPS.TYPE.eq(type))
+                .and(JOB_STEPS.STATUS.eq(status)));
     }
 }

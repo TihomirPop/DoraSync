@@ -1,0 +1,1 @@
+ALTER TYPE job_step_type ADD VALUE 'COMPUTE_METRICS';

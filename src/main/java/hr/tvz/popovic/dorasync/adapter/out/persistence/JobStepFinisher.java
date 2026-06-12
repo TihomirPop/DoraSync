@@ -40,11 +40,12 @@ public class JobStepFinisher implements FinishJobStepPort {
     }
 
     @Override
-    public FailResult fail(Id jobStepId) {
+    public FailResult failAllForJob(Id jobId) {
         try {
             dsl.update(JOB_STEPS)
                     .set(JOB_STEPS.STATUS, JobStepStatus.FAILURE)
-                    .where(JOB_STEPS.ID.eq(jobStepId.value()))
+                    .where(JOB_STEPS.JOB_ID.eq(jobId.value()))
+                    .and(JOB_STEPS.STATUS.in(JobStepStatus.PENDING, JobStepStatus.RUNNING))
                     .execute();
 
             return new FailResult.Success();

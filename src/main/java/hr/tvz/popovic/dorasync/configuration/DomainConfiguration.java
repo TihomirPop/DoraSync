@@ -1,5 +1,6 @@
 package hr.tvz.popovic.dorasync.configuration;
 
+import hr.tvz.popovic.dorasync.application.domain.service.ComputeMetricsStepProcessor;
 import hr.tvz.popovic.dorasync.application.domain.service.DeploykoStepCollector;
 import hr.tvz.popovic.dorasync.application.domain.service.GithubStepCollector;
 import hr.tvz.popovic.dorasync.application.domain.service.JenkinsStepCollector;
@@ -101,6 +102,11 @@ public class DomainConfiguration {
     }
 
     @Bean
+    ComputeMetricsStepProcessor computeMetricsStepProcessor(TransactionRunnerPort transactionRunnerPort) {
+        return new ComputeMetricsStepProcessor(transactionRunnerPort);
+    }
+
+    @Bean
     JobStepWorker jobStepWorker(
             @Value("${dora-sync.job-step-worker.batch-size}") int batchSize,
             TransactionRunnerPort transactionRunnerPort,
@@ -110,7 +116,8 @@ public class DomainConfiguration {
             TaskExecutorPort taskExecutorPort,
             GithubStepCollector githubStepCollector,
             JenkinsStepCollector jenkinsStepCollector,
-            DeploykoStepCollector deploykoStepCollector
+            DeploykoStepCollector deploykoStepCollector,
+            ComputeMetricsStepProcessor computeMetricsStepProcessor
     ) {
         return new JobStepWorker(
                 batchSize,
@@ -121,7 +128,8 @@ public class DomainConfiguration {
                 taskExecutorPort,
                 githubStepCollector,
                 jenkinsStepCollector,
-                deploykoStepCollector
+                deploykoStepCollector,
+                computeMetricsStepProcessor
         );
     }
 

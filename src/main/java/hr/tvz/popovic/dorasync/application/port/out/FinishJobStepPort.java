@@ -6,7 +6,7 @@ public interface FinishJobStepPort {
 
     SucceedResult succeed(Id jobStepId);
 
-    FailResult fail(Id jobStepId);
+    FailResult failAllForJob(Id jobId);
 
     sealed interface SucceedResult {
 

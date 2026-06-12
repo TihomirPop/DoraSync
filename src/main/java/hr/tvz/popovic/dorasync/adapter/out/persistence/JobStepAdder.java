@@ -22,14 +22,19 @@ public class JobStepAdder implements AddJobStepPort {
 
     @Override
     public Result addStep(Id jobId, ConnectionType connectionType) {
+        return insert(jobId, toJobStepType(connectionType));
+    }
+
+    @Override
+    public Result addComputeMetricsStep(Id jobId) {
+        return insert(jobId, JobStepType.COMPUTE_METRICS);
+    }
+
+    private Result insert(Id jobId, JobStepType type) {
         try {
             var record = dsl.insertInto(JOB_STEPS)
                     .columns(JOB_STEPS.JOB_ID, JOB_STEPS.TYPE, JOB_STEPS.STATUS)
-                    .values(
-                            jobId.value(),
-                            toJobStepType(connectionType),
-                            JobStepStatus.PENDING
-                    )
+                    .values(jobId.value(), type, JobStepStatus.PENDING)
                     .returning(JOB_STEPS.ID)
                     .fetchOne();
 

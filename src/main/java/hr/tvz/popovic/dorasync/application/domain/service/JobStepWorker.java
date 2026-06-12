@@ -1,7 +1,7 @@
 package hr.tvz.popovic.dorasync.application.domain.service;
 
-import hr.tvz.popovic.dorasync.application.domain.model.CollectResult;
 import hr.tvz.popovic.dorasync.application.domain.model.JobStep;
+import hr.tvz.popovic.dorasync.application.domain.model.StepResult;
 import hr.tvz.popovic.dorasync.application.port.in.WorkJobStepsUseCase;
 import hr.tvz.popovic.dorasync.application.port.out.DequeueJobStepsPort;
 import hr.tvz.popovic.dorasync.application.port.out.FinishJobPort;
@@ -24,6 +24,7 @@ public final class JobStepWorker implements WorkJobStepsUseCase {
     private final GithubStepCollector githubStepCollector;
     private final JenkinsStepCollector jenkinsStepCollector;
     private final DeploykoStepCollector deploykoStepCollector;
+    private final ComputeMetricsStepProcessor computeMetricsStepProcessor;
 
     public JobStepWorker(
             int batchSize,
@@ -34,7 +35,8 @@ public final class JobStepWorker implements WorkJobStepsUseCase {
             TaskExecutorPort taskExecutorPort,
             GithubStepCollector githubStepCollector,
             JenkinsStepCollector jenkinsStepCollector,
-            DeploykoStepCollector deploykoStepCollector
+            DeploykoStepCollector deploykoStepCollector,
+            ComputeMetricsStepProcessor computeMetricsStepProcessor
     ) {
         this.batchSize = batchSize;
         this.transactionRunner = transactionRunner;
@@ -45,6 +47,7 @@ public final class JobStepWorker implements WorkJobStepsUseCase {
         this.githubStepCollector = githubStepCollector;
         this.jenkinsStepCollector = jenkinsStepCollector;
         this.deploykoStepCollector = deploykoStepCollector;
+        this.computeMetricsStepProcessor = computeMetricsStepProcessor;
     }
 
     @Override
@@ -61,18 +64,17 @@ public final class JobStepWorker implements WorkJobStepsUseCase {
     }
 
     private void process(JobStep jobStep) {
-        switch (collect(jobStep)) {
-            case CollectResult.Success() -> finishStep(jobStep);
-            case CollectResult.Failure(var cause) -> failStep(jobStep, cause);
-        }
-    }
-
-    private CollectResult collect(JobStep jobStep) {
-        return switch (jobStep) {
-            case JobStep.CollectGithubStep step -> githubStepCollector.collect(step);
-            case JobStep.CollectJenkinsStep step -> jenkinsStepCollector.collect(step);
-            case JobStep.CollectDeploykoStep step -> deploykoStepCollector.collect(step);
+        StepResult result = switch (jobStep) {
+            case JobStep.CollectGithubStep step -> githubStepCollector.process(step);
+            case JobStep.CollectJenkinsStep step -> jenkinsStepCollector.process(step);
+            case JobStep.CollectDeploykoStep step -> deploykoStepCollector.process(step);
+            case JobStep.ComputeMetricsStep step -> computeMetricsStepProcessor.process(step);
         };
+
+        switch (result) {
+            case StepResult.Success() -> finishStep(jobStep);
+            case StepResult.Failure(var cause) -> failStep(jobStep, cause);
+        }
     }
 
     private void finishStep(JobStep jobStep) {
@@ -106,23 +108,23 @@ public final class JobStepWorker implements WorkJobStepsUseCase {
     }
 
     private void failStep(JobStep jobStep, Exception collectCause) {
-        log.warn("Job step {} failed during collection; marking step and job as failed", jobStep.id(), collectCause);
+        log.warn("Job step {} failed during collection; marking job {} and its remaining steps as failed", jobStep.id(), jobStep.jobId(), collectCause);
 
         var transactionResult = transactionRunner.inTransaction(transaction -> {
-            switch (finishJobStepPort.fail(jobStep.id())) {
-                case FinishJobStepPort.FailResult.Success() -> {
-                    switch (finishJobPort.fail(jobStep.jobId())) {
-                        case FinishJobPort.Result.Success() -> {
+            switch (finishJobPort.fail(jobStep.jobId())) {
+                case FinishJobPort.Result.Success() -> {
+                    switch (finishJobStepPort.failAllForJob(jobStep.jobId())) {
+                        case FinishJobStepPort.FailResult.Success() -> {
                         }
-                        case FinishJobPort.Result.Failure(var cause) -> {
+                        case FinishJobStepPort.FailResult.Failure(var cause) -> {
                             transaction.rollback();
-                            log.error("Failed to mark job {} as failed", jobStep.jobId(), cause);
+                            log.error("Failed to mark steps of job {} as failed", jobStep.jobId(), cause);
                         }
                     }
                 }
-                case FinishJobStepPort.FailResult.Failure(var cause) -> {
+                case FinishJobPort.Result.Failure(var cause) -> {
                     transaction.rollback();
-                    log.error("Failed to mark job step {} as failed", jobStep.id(), cause);
+                    log.error("Failed to mark job {} as failed", jobStep.jobId(), cause);
                 }
             }
             return null;

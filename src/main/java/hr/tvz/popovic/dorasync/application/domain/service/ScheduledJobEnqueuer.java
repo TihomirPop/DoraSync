@@ -102,7 +102,7 @@ public final class ScheduledJobEnqueuer implements EnqueueScheduledJobsUseCase {
             return new ProcessResult.Done();
         }
 
-        var runResult = runJobPort.run(service.id(), LockedUntil.nowPlusTenMinutes());
+        var runResult = runJobPort.run(service.id(), LockedUntil.nowPlusThirtyMinutes());
         Id jobId;
         switch (runResult) {
             case RunJobPort.Result.Success(var id) -> jobId = id;
@@ -124,6 +124,16 @@ public final class ScheduledJobEnqueuer implements EnqueueScheduledJobsUseCase {
                     transaction.rollback();
                     return new ProcessResult.Failed("Failed to add job step " + connectionType + " for job " + jobId, cause);
                 }
+            }
+        }
+
+        // The compute-metrics step is enqueued up front; the worker only dequeues it once every collect step has succeeded.
+        switch (addJobStepPort.addComputeMetricsStep(jobId)) {
+            case AddJobStepPort.Result.Success(var _) -> {
+            }
+            case AddJobStepPort.Result.Failure(var cause) -> {
+                transaction.rollback();
+                return new ProcessResult.Failed("Failed to add compute-metrics step for job " + jobId, cause);
             }
         }
 

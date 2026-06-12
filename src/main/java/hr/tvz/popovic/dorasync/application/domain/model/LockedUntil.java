@@ -11,8 +11,8 @@ public record LockedUntil(Instant value) {
         requireNonNull(value, "value must not be null");
     }
 
-    public static LockedUntil nowPlusTenMinutes() {
-        return new LockedUntil(Instant.now().plus(Duration.ofMinutes(10)));
+    public static LockedUntil nowPlusThirtyMinutes() {
+        return new LockedUntil(Instant.now().plus(Duration.ofMinutes(30)));
     }
 
 }

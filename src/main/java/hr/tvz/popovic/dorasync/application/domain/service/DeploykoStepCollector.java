@@ -1,6 +1,6 @@
 package hr.tvz.popovic.dorasync.application.domain.service;
 
-import hr.tvz.popovic.dorasync.application.domain.model.CollectResult;
+import hr.tvz.popovic.dorasync.application.domain.model.StepResult;
 import hr.tvz.popovic.dorasync.application.domain.model.ConnectionType;
 import hr.tvz.popovic.dorasync.application.domain.model.Deployment;
 import hr.tvz.popovic.dorasync.application.domain.model.DeploymentCursor;
@@ -14,7 +14,7 @@ import hr.tvz.popovic.dorasync.application.port.out.TransactionRunnerPort;
 
 import java.util.List;
 
-public final class DeploykoStepCollector {
+public final class DeploykoStepCollector implements StepProcessor<JobStep.CollectDeploykoStep> {
 
     private final FetchConnectionPort fetchConnectionPort;
     private final FetchDeploykoDeploymentsPort fetchDeploykoDeploymentsPort;
@@ -33,29 +33,30 @@ public final class DeploykoStepCollector {
         this.transactionRunner = transactionRunner;
     }
 
-    public CollectResult collect(JobStep.CollectDeploykoStep step) {
+    @Override
+    public StepResult process(JobStep.CollectDeploykoStep step) {
         return switch (fetchConnectionPort.fetch(step.jobId(), ConnectionType.DEPLOYKO)) {
             case FetchConnectionPort.Result.Success(var serviceId, var connectionId, var externalReference) ->
                     collect(connectionId, DeploykoService.of(externalReference));
             case FetchConnectionPort.Result.NotFound() ->
-                    new CollectResult.Failure(new IllegalStateException("No DEPLOYKO connection found for job " + step.jobId().value()));
-            case FetchConnectionPort.Result.Failure(var cause) -> new CollectResult.Failure(cause);
+                    new StepResult.Failure(new IllegalStateException("No DEPLOYKO connection found for job " + step.jobId().value()));
+            case FetchConnectionPort.Result.Failure(var cause) -> new StepResult.Failure(cause);
         };
     }
 
-    private CollectResult collect(Id connectionId, DeploykoService service) {
+    private StepResult collect(Id connectionId, DeploykoService service) {
         DeploymentCursor cursor;
         switch (deploykoRepositoryPort.findLatestRecordedAt(connectionId)) {
             case DeploykoRepositoryPort.FindCursorResult.Success(var foundCursor) -> cursor = foundCursor;
             case DeploykoRepositoryPort.FindCursorResult.Failure(var cause) -> {
-                return new CollectResult.Failure(cause);
+                return new StepResult.Failure(cause);
             }
         }
 
         return switch (fetchDeploykoDeploymentsPort.fetch(service, cursor)) {
             case FetchDeploykoDeploymentsPort.Result.Success(var deployments) ->
                     persist(connectionId, service, terminalOnly(deployments));
-            case FetchDeploykoDeploymentsPort.Result.Failure(var cause) -> new CollectResult.Failure(cause);
+            case FetchDeploykoDeploymentsPort.Result.Failure(var cause) -> new StepResult.Failure(cause);
         };
     }
 
@@ -65,26 +66,26 @@ public final class DeploykoStepCollector {
                 .toList();
     }
 
-    private CollectResult persist(Id connectionId, DeploykoService service, List<Deployment> deployments) {
+    private StepResult persist(Id connectionId, DeploykoService service, List<Deployment> deployments) {
         var transactionResult = transactionRunner.inTransaction(transaction -> {
-            CollectResult result = switch (deploykoRepositoryPort.upsertTarget(connectionId, service)) {
+            StepResult result = switch (deploykoRepositoryPort.upsertTarget(connectionId, service)) {
                 case DeploykoRepositoryPort.UpsertTargetResult.Success(var deploymentTargetId) ->
                         switch (deploykoRepositoryPort.saveDeployments(deploymentTargetId, deployments)) {
-                            case DeploykoRepositoryPort.SaveDeploymentsResult.Success(var savedCount) -> new CollectResult.Success();
-                            case DeploykoRepositoryPort.SaveDeploymentsResult.Failure(var cause) -> new CollectResult.Failure(cause);
+                            case DeploykoRepositoryPort.SaveDeploymentsResult.Success(var savedCount) -> new StepResult.Success();
+                            case DeploykoRepositoryPort.SaveDeploymentsResult.Failure(var cause) -> new StepResult.Failure(cause);
                         };
-                case DeploykoRepositoryPort.UpsertTargetResult.Failure(var cause) -> new CollectResult.Failure(cause);
+                case DeploykoRepositoryPort.UpsertTargetResult.Failure(var cause) -> new StepResult.Failure(cause);
             };
 
-            if (result instanceof CollectResult.Failure) {
+            if (result instanceof StepResult.Failure) {
                 transaction.rollback();
             }
             return result;
         });
 
         return switch (transactionResult) {
-            case TransactionRunnerPort.Result.Success<CollectResult>(var result) -> result;
-            case TransactionRunnerPort.Result.Failure<CollectResult>(var cause) -> new CollectResult.Failure(cause);
+            case TransactionRunnerPort.Result.Success<StepResult>(var result) -> result;
+            case TransactionRunnerPort.Result.Failure<StepResult>(var cause) -> new StepResult.Failure(cause);
         };
     }
 }

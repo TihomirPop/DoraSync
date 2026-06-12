@@ -21,7 +21,9 @@ public enum JobStepType implements EnumType {
 
     COLLECT_JENKINS("COLLECT_JENKINS"),
 
-    COLLECT_DEPLOYKO("COLLECT_DEPLOYKO");
+    COLLECT_DEPLOYKO("COLLECT_DEPLOYKO"),
+
+    COMPUTE_METRICS("COMPUTE_METRICS");
 
     private final String literal;
 
