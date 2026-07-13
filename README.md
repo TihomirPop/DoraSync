@@ -1,6 +1,6 @@
 # DoraSync
 
-DoraSync is a tool for collecting data needed for Dora and other metrics from CI/CD pipelines.
+DoraSync is a tool for collecting data needed for DORA and other metrics from CI/CD pipelines.
 
 ## Local Development
 
